@@ -44,6 +44,7 @@ const PromoBanners = styled(motion.div)`
   @media (max-width: 1200px) {
     max-width: 600px;
     width: 100%;
+    margin-top: 2em
   }
 `;
 
