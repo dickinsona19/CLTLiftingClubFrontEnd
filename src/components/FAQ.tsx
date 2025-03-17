@@ -1,0 +1,185 @@
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { Plus, Minus } from 'lucide-react';
+import { useState } from 'react';
+
+const Section = styled.section`
+  padding: 8rem 1rem;
+  background: url('https://images.unsplash.com/photo-1593079831268-3381b0db4a77?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80')
+    no-repeat center/cover fixed;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  }
+`;
+
+const Container = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+`;
+
+const Title = styled(motion.h2)`
+  text-align: center;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 4rem;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+`;
+
+const FAQItem = styled(motion.div)`
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const Question = styled.button`
+  width: 100%;
+  text-align: left;
+  padding: 1.5rem;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+`;
+
+const Answer = styled(motion.div)`
+  padding: 0 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  font-size: clamp(0.9rem, 2.5vw, 1.125rem);
+  letter-spacing: 0.5px;
+`;
+
+const IconWrapper = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: white;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  ${Question}:hover & {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+  }
+`;
+
+const faqData = [
+  {
+    question: "What equipment do you have?",
+    answer: "We feature top-of-the-line equipment including Rogue power racks, Eleiko bars and plates, competition benches, and a full range of specialty bars and accessories for powerlifting and strength training."
+  },
+  {
+    question: "Do you offer personal training?",
+    answer: "Yes, we have certified strength coaches available for one-on-one training. All our trainers have competitive experience and specialized certifications in powerlifting and strength sports."
+  },
+  {
+    question: "What are your hours?",
+    answer: "We're open 24/7 for members. Staffed hours are Monday-Friday 6am-10pm, and weekends 8am-8pm."
+  },
+  {
+    question: "Is there a contract?",
+    answer: "We offer both month-to-month and annual membership options. No long-term contract is required for our standard membership."
+  },
+  {
+    question: "What's included in membership?",
+    answer: "Members get unlimited access to all equipment, recovery facilities including sauna and cold plunge, free programming, and exclusive member events. Founding members also receive special perks and locked-in rates."
+  }
+];
+
+export const FAQ = () => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  return (
+    <Section>
+      <Container>
+        <Title
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Frequently Asked Questions
+        </Title>
+        {faqData.map((item, index) => (
+          <FAQItem 
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <Question onClick={() => setActiveIndex(activeIndex === index ? null : index)}>
+              {item.question}
+              <IconWrapper>
+                {activeIndex === index ? <Minus size={24} /> : <Plus size={24} />}
+              </IconWrapper>
+            </Question>
+            <Answer
+              initial={false}
+              animate={{ 
+                height: activeIndex === index ? "auto" : 0, 
+                opacity: activeIndex === index ? 1 : 0 
+              }}
+              transition={{ duration: 0.3 }}
+              style={{ overflow: "hidden" }}
+            >
+              <p style={{ padding: "0 0 1.5rem" }}>{item.answer}</p>
+            </Answer>
+          </FAQItem>
+        ))}
+      </Container>
+    </Section>
+  );
+};
