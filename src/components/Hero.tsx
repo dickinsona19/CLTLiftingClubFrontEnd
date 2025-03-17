@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const HeroSection = styled.section`
   height: 100vh;
@@ -65,7 +66,7 @@ const CTAContainer = styled(motion.div)`
   flex-wrap: wrap;
 `;
 
-const PrimaryButton = styled(motion.button)`
+const PrimaryButton = styled(Link)`
   padding: clamp(1rem, 2vw, 1.25rem) clamp(2rem, 4vw, 3rem);
   background: transparent;
   color: white;
@@ -140,7 +141,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            <PrimaryButton onClick={onJoinClick}>
+            <PrimaryButton to="/signup" >
               Get Started
             </PrimaryButton>
             <SecondaryButton onClick={onFreePassClick}>
