@@ -144,7 +144,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             <PrimaryButton to="/signup" >
               Get Started
             </PrimaryButton>
-            <SecondaryButton onClick={onFreePassClick}>
+            <SecondaryButton onClick={onJoinClick}>
               Learn More
             </SecondaryButton>
           </CTAContainer>
