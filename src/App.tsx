@@ -13,6 +13,7 @@ import { FAQ } from './components/FAQ';
 import { SignUpForm } from './components/signupPage/SignUpForm';
 import SuccessPage from './components/signupPage/SuccessPage';
 import TermsAndConditions from './components/signupPage/TermsAndConditions';
+import { LocationMap } from './components/LocationMap';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -89,7 +90,7 @@ function HomePage() {
       <div ref={membershipRef}>
         <Membership/>
       </div>
-
+      <LocationMap/>
       <div ref={freePassRef}>
         <FreePass />
       </div>
