@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Dumbbell, User, Phone, Calendar as CalendarIcon, Lock } from 'lucide-react';
 import { Form, Input, message } from 'antd';
+import SideStairMaster from '../assets/SideStairMaster.jpg';
 
 const Section = styled.section`
   padding: 8rem 2rem;
-  background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80')
+  background: url(${SideStairMaster})
     no-repeat center/cover fixed;
   position: relative;
   color: white;

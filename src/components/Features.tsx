@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Dumbbell, Users, Trophy } from 'lucide-react';
+import Dumbbells from '../assets/Dumbbells.jpg';
+
+
 
 const Section = styled.section`
+
   padding: 8rem 1rem;
-  background: url('https://images.unsplash.com/photo-1550345332-09e3ac987658?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+  background: url(${Dumbbells})
     no-repeat center/cover fixed;
   position: relative;
   overflow: hidden;
@@ -186,7 +190,7 @@ export const Features = ({ onSaunaClick, onColdPlungeClick }: FeaturesProps) => 
           </IconWrapper>
           <Title>Elite Equipment</Title>
           <Description>
-            Train with competition-grade equipment from top manufacturers. Every piece carefully selected for peak performance.
+            Train with high level equipment from top manufacturers. Every piece carefully selected for peak performance.
           </Description>
         </Feature>
         <Feature variants={item}>
@@ -194,7 +198,7 @@ export const Features = ({ onSaunaClick, onColdPlungeClick }: FeaturesProps) => 
             <Users size={48} strokeWidth={1.5} />
           </IconWrapper>
         <Title>Recovery</Title>       
-          <Description> Discover expert recovery techniques from world-class coaches with proven success in optimizing strength, conditioning, and restoration. </Description>
+          <Description> Discover expert techniques for optimizing recovery, focusing on strategies for improving strength, conditioning, and restoration.</Description>
           <Button onClick={onSaunaClick}>
             Learn More
           </Button>
@@ -205,7 +209,7 @@ export const Features = ({ onSaunaClick, onColdPlungeClick }: FeaturesProps) => 
           </IconWrapper>
           <Title>Champion Results</Title>
           <Description>
-            Join our community of record-holders and elite athletes who've achieved extraordinary results.
+               Join a community of dedicated athletes and individuals who’ve achieved impressive results through hard work and smart training.
           </Description>
           <Button onClick={onColdPlungeClick}>
             Explore

@@ -14,7 +14,7 @@ import { SignUpForm } from './components/signupPage/SignUpForm';
 import SuccessPage from './components/signupPage/SuccessPage';
 import TermsAndConditions from './components/signupPage/TermsAndConditions';
 import { LocationMap } from './components/LocationMap';
-
+import JustDoIt from './assets/JustDoIt.jpg'
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -40,10 +40,10 @@ const GlobalStyle = createGlobalStyle`
 
 const gymImages = [
   {
-    url: "https://images.unsplash.com/photo-1574680376345-b2995af0324f?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: JustDoIt,
     alt: "Premium gym equipment",
     title: "ELITE EQUIPMENT",
-    description: "Train with competition-grade equipment designed for champions"
+    description: "Access high-quality equipment for a professional workout experience"
   },
   {
     url: "https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
@@ -55,7 +55,7 @@ const gymImages = [
     url: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
     alt: "Professional power rack area",
     title: "STRENGTH SANCTUARY",
-    description: "Where legends are forged and limits are shattered"
+    description: "A space for pushing boundaries"
   }
 ];
 

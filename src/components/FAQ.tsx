@@ -119,15 +119,15 @@ const IconWrapper = styled.span`
 const faqData = [
   {
     question: "What equipment do you have?",
-    answer: "We feature top-of-the-line equipment including Rogue power racks, Eleiko bars and plates, competition benches, and a full range of specialty bars and accessories for powerlifting and strength training."
+    answer: "We offer high-quality equipment, including power racks, bars, plates, benches, and a selection of specialty accessories for strength training and powerlifting."
   },
   {
     question: "Do you offer personal training?",
-    answer: "Yes, we have certified strength coaches available for one-on-one training. All our trainers have competitive experience and specialized certifications in powerlifting and strength sports."
+    answer: "Yes, we have experienced trainers available for one-on-one sessions, with backgrounds in powerlifting, bodybuilding, and strength sports."
   },
   {
     question: "What are your hours?",
-    answer: "We're open 24/7 for members. Staffed hours are Monday-Friday 6am-10pm, and weekends 8am-8pm."
+    answer: "M-T: 5 AM - 11PM, F: 5AM - 9PM, Saturday: 7AM - 9PM, Sunday: 9AM - 9PM"
   },
   {
     question: "Is there a contract?",
@@ -135,7 +135,7 @@ const faqData = [
   },
   {
     question: "What's included in membership?",
-    answer: "Members get unlimited access to all equipment, recovery facilities including sauna and cold plunge, free programming, and exclusive member events. Founding members also receive special perks and locked-in rates."
+    answer: "Members get unlimited access to all equipment, recovery facilities including sauna and cold plunge, and exclusive member events."
   }
 ];
 

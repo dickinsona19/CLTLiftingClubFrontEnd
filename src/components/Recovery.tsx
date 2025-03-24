@@ -221,7 +221,7 @@ export const Recovery = () => {
             <IconWrapper>
               <Waves size={48} />
             </IconWrapper>
-            <FeatureTitle>Infrared Sauna Suite</FeatureTitle>
+            <FeatureTitle>Infrared and Traditional Sauna Suite</FeatureTitle>
             <Description>
               Experience deep tissue healing and relaxation in our premium infrared saunas. 
               Utilizing advanced technology for optimal therapeutic benefits.
@@ -270,7 +270,7 @@ export const Recovery = () => {
             </BenefitsList>
           </Feature>
         </Grid>
-        <Stats>
+        {/* <Stats>
           <StatItem
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -298,7 +298,7 @@ export const Recovery = () => {
             <StatNumber>24/7</StatNumber>
             <StatLabel>Recovery Access</StatLabel>
           </StatItem>
-        </Stats>
+        </Stats> */}
       </Container>
     </Section>
   );

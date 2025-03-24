@@ -239,6 +239,7 @@ export const Membership = () => {
               Coming Soon
             </Button>
           </PlanCard>
+          
 
           <PlanCard
             initial={{ opacity: 0, y: 30 }}
@@ -246,17 +247,17 @@ export const Membership = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <PlanName>Founding Member</PlanName>
-            <Price>$89 <span>/ month</span></Price>
+            <PlanName>New Member</PlanName>
+            <Price>$79 <span>/ month</span></Price>
             <ActivationFee>No Activation Fee</ActivationFee>
             <Features>
-              <Feature>
+              {/* <Feature>
                 <Star size={20} />
                 First Month Free
-              </Feature>
+              </Feature> */}
               <Feature>
                 <Clock size={20} />
-                24/7 Access
+                Not avalible after April 12th
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
@@ -281,18 +282,18 @@ export const Membership = () => {
             transition={{ delay: 0.5 }}
           >
             <PlanName>Annual</PlanName>
-            <Price>$89 <span>/ month</span></Price>
+            <Price>$79 <span>/ month</span></Price>
             <ActivationFee>$49 Activation Fee</ActivationFee>
-            <PaymentNote>Paid in full - $1,068 annually</PaymentNote>
+            <PaymentNote>Paid in full - $948 annually</PaymentNote>
             <Features>
               <Feature>
                 <Calendar size={20} />
                 12-Month Commitment
               </Feature>
-              <Feature>
+              {/* <Feature>
                 <Clock size={20} />
                 24/7 Access
-              </Feature>
+              </Feature> */}
               <Feature>
                 <Dumbbell size={20} />
                 All Equipment Access
@@ -311,7 +312,7 @@ export const Membership = () => {
         </Grid>
 
         <MaintenanceFee>
-          <p>All memberships include a bi-annual maintenance fee of $59.99 charged in January and June</p>
+          <p>All memberships include a bi-annual maintenance fee of $49.99 charged in January and June</p>
         </MaintenanceFee>
       </Container>
     </Section>

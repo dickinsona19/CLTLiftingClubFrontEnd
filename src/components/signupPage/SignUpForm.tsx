@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { loadStripe } from '@stripe/stripe-js';
@@ -205,7 +205,7 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const stripePromise = loadStripe("pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X1XqAuwzNiMdc5KQI8yYBRCI2qzGoT9WW9eptoZQhNOMR2mxSaxo00AtKHFX5N");
+const stripePromise = loadStripe("pk_test_51R048D4PBwB8fzGsWnEnjgrfpS24n4rJ9kSQ3NUUV1kuw9HNjstVd02I8tjD6N05s39yTvkCvmJqLK0IK5ud5nPq00cVBTVZvf");
 
 export const SignUpForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -219,11 +219,15 @@ export const SignUpForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validatedOtp, setValidatedOtp] = useState(false);
+  const [referralCode, setReferralCode] = useState('')
+  const [referedUser, setReferredUser] = useState();
+
+  const baseAPI = 'https://boss-lifting-club-api-1.onrender.com'
 
   const sendOTP = async (phone?: string) => {
     setLoading(true);
     try {
-      const response = await fetch('https://boss-lifting-club-api.onrender.com/api/auth/send-otp', {
+      const response = await fetch(baseAPI + '/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: `${phone}` }),
@@ -241,6 +245,40 @@ export const SignUpForm: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleReferrerUser = () => {
+      if (referralCode.length === 10) {
+        // Make API request to get user
+        fetch(`${baseAPI}/users/referralCode/${referralCode}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any additional headers if needed (e.g., authorization)
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log('User Data:', data);
+            setReferredUser(data)
+          })
+          .catch((error) => {
+            console.error('Error fetching user:', error);
+            setReferredUser("Not Found")
+          });
+      } else {
+        console.log('Referral code must be 10 characters long');
+        setReferredUser("Not Found")
+      }
+    }
+
+      handleReferrerUser()
+  }, [referralCode]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -263,7 +301,7 @@ export const SignUpForm: React.FC = () => {
         return;
       }
       if (!validatedOtp) {
-        const verifyResponse = await fetch('https://boss-lifting-club-api.onrender.com/api/auth/verify-otp', {
+        const verifyResponse = await fetch(baseAPI + '/api/auth/verify-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phoneNumber: `+1 ${phoneNumber}`, otp: otpValue }),
@@ -276,7 +314,7 @@ export const SignUpForm: React.FC = () => {
         }
       }
 
-      const signupResponse = await fetch('https://boss-lifting-club-api.onrender.com/signupWithCard', {
+      const signupResponse = await fetch(baseAPI + '/signupWithCard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -284,6 +322,8 @@ export const SignUpForm: React.FC = () => {
           lastName,
           phoneNumber,
           password,
+          membershipName: "Founder",
+          referralId : referedUser?.id
         }),
       });
       const signupData = await signupResponse.json();
@@ -318,8 +358,8 @@ export const SignUpForm: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h2>$89/Month</h2>
-            <p>Sign up now for our exclusive Founders Month-to-Month membership and get your first month free!</p>
+            <h2>$79/Month</h2>
+            <p>Sign up now for our exclusive Founders Month-to-Month membership!</p>
           </PriceBanner>
 
           <SpecialOffer
@@ -330,13 +370,7 @@ export const SignUpForm: React.FC = () => {
             <p>Special Pre-Opening Offer: We will not charge you until the gym opens!</p>
           </SpecialOffer>
 
-          <FreeMonthBanner
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <h3>FREE MONTH OFFER! 🎉</h3>
-            <p>Get your first month of membership absolutely free! No strings attached.</p>
-          </FreeMonthBanner>
+         
         </PromoBanners>
 
         <FormWrapper>
@@ -375,8 +409,21 @@ export const SignUpForm: React.FC = () => {
               <Input.Password size="large" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </Form.Item>
 
+            <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
+              <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
+            </Form.Item>
+            {referedUser &&
             <MaintenanceFeeNote>
-              Note: All memberships include a bi-annual maintenance fee of $59.99 charged in January and June
+           {referedUser === "Not Found" ? (
+                <>Cannot Find reference</>
+              ) : (
+                <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
+              )}
+            </MaintenanceFeeNote> 
+            }
+
+            <MaintenanceFeeNote>
+              Note: All memberships include a bi-annual maintenance fee of $49.99 charged in January and June
             </MaintenanceFeeNote>
 
             <Form.Item name="termsAndConditions" valuePropName="checked" rules={[{ required: true, message: 'Please accept the terms and conditions' }]}>
