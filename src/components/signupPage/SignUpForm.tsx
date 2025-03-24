@@ -205,7 +205,7 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const stripePromise = loadStripe("pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X1XqAuwzNiMdc5KQI8yYBRCI2qzGoT9WW9eptoZQhNOMR2mxSaxo00AtKHFX5N");
+const stripePromise = loadStripe("pk_test_51R048D4PBwB8fzGsWnEnjgrfpS24n4rJ9kSQ3NUUV1kuw9HNjstVd02I8tjD6N05s39yTvkCvmJqLK0IK5ud5nPq00cVBTVZvf");
 
 export const SignUpForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -222,7 +222,7 @@ export const SignUpForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState('')
   const [referedUser, setReferredUser] = useState();
 
-  const baseAPI = 'https://boss-lifting-club-api-1.onrender.com'
+  const baseAPI = 'https://boss-lifting-club-api.onrender.com'
 
   const sendOTP = async (phone?: string) => {
     setLoading(true);
