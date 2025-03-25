@@ -6,14 +6,25 @@ import NikeCloseUp from '../assets/NikeCloseUp.jpg'
 
 
 const Section = styled.section`
-
-  padding: 4rem 1rem; /* Adjusted padding for mobile */
-  background: url(${NikeCloseUp})
-    no-repeat center/cover fixed;
+  min-height: 100vh; /* Added for full-screen effect */
+  padding: 4rem 1rem; /* Base padding for mobile */
+  background: url(${NikeCloseUp}) no-repeat center/cover; /* No fixed by default */
   background-position: center 65%;
   position: relative;
   overflow: hidden;
-  
+
+  @media (min-width: 769px) {
+    background-attachment: fixed; /* Fixed only on desktop */
+  }
+
+  @media (min-width: 640px) {
+    padding: 8rem 2rem; /* Larger padding for desktop */
+  }
+
+  @media (max-width: 768px) {
+    background-position: center; /* Optional: reset for mobile */
+  }
+
   &:before {
     content: '';
     position: absolute;
@@ -22,6 +33,7 @@ const Section = styled.section`
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.85);
+    z-index: 1;
   }
 
   &:after {
@@ -32,10 +44,7 @@ const Section = styled.section`
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  }
-
-  @media (min-width: 640px) {
-    padding: 8rem 2rem; /* Adjusted padding for desktop */
+    z-index: 2;
   }
 `;
 

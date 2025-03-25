@@ -5,11 +5,16 @@ import { useState } from 'react';
 import ShoePicture from '../assets/ShoePicture.jpg';
 const Section = styled.section`
   padding: 8rem 1rem;
-  background: url(${ShoePicture})
-    no-repeat center/cover fixed;
+  background: url(${ShoePicture}) no-repeat center/cover; 
   position: relative;
   overflow: hidden;
 
+  @media (min-width: 769px) {
+    background-attachment: fixed; 
+  }
+@media (max-width: 768px) {
+    padding: 4rem 1rem; 
+  }
   &:before {
     content: '';
     position: absolute;

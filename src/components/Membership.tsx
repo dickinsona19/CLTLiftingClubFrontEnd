@@ -4,18 +4,26 @@ import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
 import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useState } from 'react';
-import TwoChairs from '../assets/TwoChairs.jpg'
+import BigWeight from '../assets/BigWeight.jpg'
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
-  background: url('${TwoChairs}')
-  no-repeat center/cover fixed;
+  background: url(${BigWeight}) no-repeat center/cover; /* No fixed by default */
   background-position: 50% 75%;
   position: relative;
   color: white;
   display: flex;
   align-items: center;
-  
+
+  @media (min-width: 769px) {
+    background-attachment: fixed; /* Fixed only on desktop */
+  }
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem; /* Smaller padding on mobile */
+    background-position: center; /* Optional: adjust if 75% looks off */
+  }
+
   &:before {
     content: '';
     position: absolute;
@@ -24,6 +32,7 @@ const Section = styled.section`
     right: 0;
     bottom: 0;
     background: linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+
   }
 `;
 

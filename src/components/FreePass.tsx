@@ -2,23 +2,22 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Dumbbell, User, Phone, Calendar as CalendarIcon, Lock } from 'lucide-react';
 import { Form, Input, message } from 'antd';
-import SideStairMaster from '../assets/SideStairMaster.jpg';
+import DumbellsSide from '../assets/DumbellsSide.jpg';
 
 const Section = styled.section`
   padding: 8rem 2rem;
-  background: url(${SideStairMaster})
-    no-repeat center/cover fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+    url(${DumbellsSide}) no-repeat center/cover;
   position: relative;
   color: white;
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+
+  @media (min-width: 769px) {
+    background-attachment: fixed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
   }
 `;
 
