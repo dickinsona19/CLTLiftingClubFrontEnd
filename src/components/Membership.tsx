@@ -324,7 +324,7 @@ const onChange = (e: RadioChangeEvent) => {
               
               <Feature>
                 <Clock size={20} />
-                Not avalible after April 12th
+                Not avalible after May 12th
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
