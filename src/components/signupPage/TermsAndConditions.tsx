@@ -315,7 +315,7 @@ const TermsAndConditions = () => {
       <SectionTitle>19. Contact Information</SectionTitle>
       <Paragraph>
         For questions or concerns, contact us at:<br />
-        Email: support@cltliftingclub.com<br />
+        Email: cltlifting@cltliftingclub.com<br />
         Phone: (704) 420-9417<br />
         Address: CLT Lifting Club, 3100 South Blvd, Charlotte, NC 28203
       </Paragraph>
