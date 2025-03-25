@@ -358,7 +358,7 @@ export const SignUpForm: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h2>$79/Month</h2>
+            <h2>$89/Month</h2>
             <p>Sign up now for our exclusive Founders Month-to-Month membership!</p>
           </PriceBanner>
 

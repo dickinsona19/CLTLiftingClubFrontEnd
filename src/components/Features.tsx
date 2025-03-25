@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Dumbbell, Users, Trophy } from 'lucide-react';
-import Dumbbells from '../assets/Dumbbells.jpg';
+import NikeCloseUp from '../assets/NikeCloseUp.jpg'
 
 
 
 const Section = styled.section`
 
   padding: 8rem 1rem;
-  background: url(${Dumbbells})
+  background: url(${NikeCloseUp})
     no-repeat center/cover fixed;
+  background-position: center 65%;
   position: relative;
   overflow: hidden;
   

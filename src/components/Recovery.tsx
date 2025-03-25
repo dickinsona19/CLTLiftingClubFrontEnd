@@ -1,23 +1,25 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Waves, Snowflake, Wind, Leaf, Timer, Heart } from 'lucide-react';
-
+import ColdPlunge from '../assets/ColdPlunge.jpg'
 const Section = styled.section`
   padding: 8rem 2rem;
-  background-image: url('https://images.unsplash.com/photo-1523471826770-c437b4636fe6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-image: url(${ColdPlunge});
   background-size: cover;
-  background-position: center;
+  background-position: bottom; /* Changed from center to bottom to move the background image down a little */
   background-repeat: no-repeat;
   color: white;
   position: relative;
   overflow: hidden;
 
   @media (max-width: 768px) {
-    background-image: url('https://images.unsplash.com/photo-1523471826770-c437b4636fe6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-image: url(${ColdPlunge});
+    background-position: bottom; /* Changed from center to bottom to move the background image down a little */
   }
 
   @media (max-width: 480px) {
-    background-image: url('https://images.unsplash.com/photo-1523471826770-c437b4636fe6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-image: url(${ColdPlunge});
+    background-position: bottom; /* Changed from center to bottom to move the background image down a little */
   }
 
   &:before {

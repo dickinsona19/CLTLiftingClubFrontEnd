@@ -134,7 +134,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
           >
             New Members
             <br />
-            <Emphasis>Only $79 per month!</Emphasis>
+            <Emphasis>Starting at $79 per month!</Emphasis>
           </Statement>
           <CTAContainer
             initial={{ opacity: 0, y: 20 }}

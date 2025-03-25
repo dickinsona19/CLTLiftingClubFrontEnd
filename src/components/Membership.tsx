@@ -1,13 +1,16 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Shield, Dumbbell, Clock, Star, Calendar, Lock } from 'lucide-react';
+import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
-
+import { Flex, Radio, RadioChangeEvent } from 'antd';
+import { useState } from 'react';
+import TwoChairs from '../assets/TwoChairs.jpg'
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
-  background: url('https://images.unsplash.com/photo-1556817411-31ae72fa3ea0?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
-    no-repeat center/cover fixed;
+  background: url('${TwoChairs}')
+  no-repeat center/cover fixed;
+  background-position: 50% 75%;
   position: relative;
   color: white;
   display: flex;
@@ -186,6 +189,10 @@ const MaintenanceFee = styled.div`
 
 
 export const Membership = () => {
+const [contractMonthTime, setContractMonthTime] = useState("No Contract")
+const onChange = (e: RadioChangeEvent) => {
+  setContractMonthTime(e.target.value);
+};
   return (
     <Section>
       <Container>
@@ -212,17 +219,46 @@ export const Membership = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <PlanName>No Contract</PlanName>
-            <Price>$109 <span>/ month</span></Price>
-            <ActivationFee>$49 Activation Fee</ActivationFee>
+            <PlanName>{contractMonthTime}</PlanName>
+            <Price>${contractMonthTime === "No Contract" ? 109 : contractMonthTime === "6 Month" ? 99 : 89} <span>/ month</span></Price>
+            <Radio.Group
+      onChange={onChange}
+      value={contractMonthTime}
+      options={[
+        {
+          value: "No Contract",
+          label: (
+            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
+              No Contract
+            </Flex>
+          ),
+        },
+        {
+          value: "6 Month",
+          label: (
+            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
+            6 Month
+          </Flex>
+          ),
+        },
+        {
+          value: "12 Month",
+          label: (
+            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
+            12 Month
+          </Flex>
+            
+          ),
+        },
+
+      ]}
+      style={{ width: '100%',marginBottom:'1em' ,padding: '.5rem', background: 'transparent', color: 'white', border: '1px solid rgba(255, 255, 255, 0.3)', borderRadius: '8px', fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '2px', transition: 'all 0.3s ease', marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center',  opacity: 1 }}
+    />
+            <ActivationFee> $49 Activation Fee </ActivationFee>
             <Features>
                             <Feature>
                 <Calendar size={20} />
-                Month-to-Month Freedom
-              </Feature>
-              <Feature>
-                <Clock size={20} />
-                24/7 Access
+               {contractMonthTime =="No Contract"? <>Month-to-Month Freedom</>:<> Locked in Conract</>}
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
@@ -247,14 +283,15 @@ export const Membership = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <PlanName>New Member</PlanName>
-            <Price>$79 <span>/ month</span></Price>
+            <PlanName>Founding Member</PlanName>
+            <Price>$89 <span>/ month</span></Price>
             <ActivationFee>No Activation Fee</ActivationFee>
             <Features>
               {/* <Feature>
                 <Star size={20} />
                 First Month Free
               </Feature> */}
+              
               <Feature>
                 <Clock size={20} />
                 Not avalible after April 12th
@@ -274,6 +311,8 @@ export const Membership = () => {
               </Button>
             </Link>
           </PlanCard>
+        
+
 
           <PlanCard
             initial={{ opacity: 0, y: 30 }}
@@ -309,6 +348,9 @@ export const Membership = () => {
               Coming Soon
             </Button>
           </PlanCard>
+
+          
+          
         </Grid>
 
         <MaintenanceFee>

@@ -191,7 +191,7 @@ export const LocationMap = () => {
               <InfoTitle>Contact</InfoTitle>
               <InfoText>
                 Phone: (704) 420-9417<br />
-                Email: info@cltliftingclub.com
+                Email: cltlifting@cltliftingclub.com
               </InfoText>
             </InfoContent>
           </InfoItem>

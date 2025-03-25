@@ -15,6 +15,8 @@ import SuccessPage from './components/signupPage/SuccessPage';
 import TermsAndConditions from './components/signupPage/TermsAndConditions';
 import { LocationMap } from './components/LocationMap';
 import JustDoIt from './assets/JustDoIt.jpg'
+import CloseWeightRack from './assets/CloseWeightRack.jpg'
+import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -46,13 +48,13 @@ const gymImages = [
     description: "Access high-quality equipment for a professional workout experience"
   },
   {
-    url: "https://images.unsplash.com/photo-1534367610401-9f5ed68180aa?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
+    url: CloseWeightRack,
     alt: "Elite weightlifting platform",
     title: "POWERLIFTING ZONE",
     description: "Dedicated platforms and premium equipment for serious lifters"
   },
   {
-    url: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80",
+    url: CloseUpDumbell,
     alt: "Professional power rack area",
     title: "STRENGTH SANCTUARY",
     description: "A space for pushing boundaries"

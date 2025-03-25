@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
-
+import ShoePicture from '../assets/ShoePicture.jpg';
 const Section = styled.section`
   padding: 8rem 1rem;
-  background: url('https://images.unsplash.com/photo-1593079831268-3381b0db4a77?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80')
+  background: url(${ShoePicture})
     no-repeat center/cover fixed;
   position: relative;
   overflow: hidden;
