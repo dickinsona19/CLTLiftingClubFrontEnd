@@ -198,7 +198,7 @@ const MaintenanceFee = styled.div`
 
 
 export const Membership = () => {
-const [contractMonthTime, setContractMonthTime] = useState("No Contract")
+const [contractMonthTime, setContractMonthTime] = useState("12 Month")
 const onChange = (e: RadioChangeEvent) => {
   setContractMonthTime(e.target.value);
 };
@@ -273,6 +273,7 @@ const onChange = (e: RadioChangeEvent) => {
       },
       {
         value: "12 Month",
+        
         label: (
           <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
             12 Month
@@ -280,6 +281,7 @@ const onChange = (e: RadioChangeEvent) => {
         ),
       },
     ]}
+    defaultValue="12 Month"
   />
 </div>
             <ActivationFee> $49 Activation Fee </ActivationFee>
