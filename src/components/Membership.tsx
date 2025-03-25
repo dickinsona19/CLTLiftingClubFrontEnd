@@ -221,39 +221,58 @@ const onChange = (e: RadioChangeEvent) => {
           >
             <PlanName>{contractMonthTime}</PlanName>
             <Price>${contractMonthTime === "No Contract" ? 109 : contractMonthTime === "6 Month" ? 99 : 89} <span>/ month</span></Price>
-            <Radio.Group
-      onChange={onChange}
-      value={contractMonthTime}
-      options={[
-        {
-          value: "No Contract",
-          label: (
-            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
-              No Contract
-            </Flex>
-          ),
-        },
-        {
-          value: "6 Month",
-          label: (
-            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
+            <div
+  style={{
+    width: '100%',
+    marginBottom: '1em',
+    padding: '.5rem',
+    background: 'transparent',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    borderRadius: '8px',
+    fontWeight: 600,
+    fontSize: '1.125rem',
+    cursor: 'pointer',
+    textTransform: 'uppercase',
+    letterSpacing: '2px',
+    transition: 'all 0.3s ease',
+    marginTop: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 1,
+  }}
+>
+  <Radio.Group
+    onChange={onChange}
+    value={contractMonthTime}
+    options={[
+      {
+        value: "No Contract",
+        label: (
+          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
+            No Contract
+          </Flex>
+        ),
+      },
+      {
+        value: "6 Month",
+        label: (
+          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
             6 Month
           </Flex>
-          ),
-        },
-        {
-          value: "12 Month",
-          label: (
-            <Flex gap="small" justify="center" align="center" vertical style={{color:'white'}}>
+        ),
+      },
+      {
+        value: "12 Month",
+        label: (
+          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
             12 Month
           </Flex>
-            
-          ),
-        },
-
-      ]}
-      style={{ width: '100%',marginBottom:'1em' ,padding: '.5rem', background: 'transparent', color: 'white', border: '1px solid rgba(255, 255, 255, 0.3)', borderRadius: '8px', fontWeight: 600, fontSize: '1.125rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '2px', transition: 'all 0.3s ease', marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center',  opacity: 1 }}
-    />
+        ),
+      },
+    ]}
+  />
+</div>
             <ActivationFee> $49 Activation Fee </ActivationFee>
             <Features>
                             <Feature>

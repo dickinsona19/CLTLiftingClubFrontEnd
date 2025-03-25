@@ -7,7 +7,7 @@ import NikeCloseUp from '../assets/NikeCloseUp.jpg'
 
 const Section = styled.section`
 
-  padding: 8rem 1rem;
+  padding: 4rem 1rem; /* Adjusted padding for mobile */
   background: url(${NikeCloseUp})
     no-repeat center/cover fixed;
   background-position: center 65%;
@@ -35,7 +35,7 @@ const Section = styled.section`
   }
 
   @media (min-width: 640px) {
-    padding: 8rem 2rem;
+    padding: 8rem 2rem; /* Adjusted padding for desktop */
   }
 `;
 

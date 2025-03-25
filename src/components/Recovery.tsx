@@ -6,20 +6,20 @@ const Section = styled.section`
   padding: 8rem 2rem;
   background-image: url(${ColdPlunge});
   background-size: cover;
-  background-position: bottom; /* Changed from center to bottom to move the background image down a little */
   background-repeat: no-repeat;
   color: white;
   position: relative;
   overflow: hidden;
 
+  /* Default background-position (optional, if not set it defaults to center) */
+  background-position: center;
+
   @media (max-width: 768px) {
-    background-image: url(${ColdPlunge});
-    background-position: bottom; /* Changed from center to bottom to move the background image down a little */
+    background-position: top; /* Aligns the top of the image with the top of the container */
   }
 
   @media (max-width: 480px) {
-    background-image: url(${ColdPlunge});
-    background-position: bottom; /* Changed from center to bottom to move the background image down a little */
+    background-position: top; /* Keeps it at the top for smaller screens */
   }
 
   &:before {
