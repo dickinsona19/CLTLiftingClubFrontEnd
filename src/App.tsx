@@ -7,17 +7,20 @@ import { Features } from './components/Features';
 import { ImageCarousel } from './components/ImageCarousel';
 import { Recovery } from './components/Recovery';
 import { Membership } from './components/Membership';
-
 import { FreePass } from './components/FreePass';
 import { FAQ } from './components/FAQ';
 import { SignUpForm } from './components/signupPage/SignUpForm';
 import SuccessPage from './components/signupPage/SuccessPage';
 import TermsAndConditions from './components/signupPage/TermsAndConditions';
 import { LocationMap } from './components/LocationMap';
+import SignWaiver from './components/SignWaiver';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
+import { AdminProvider } from './contexts/AdminContext';
 import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
-import SignWaiver from './components/SignWaiver';
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -62,7 +65,6 @@ const gymImages = [
   }
 ];
 
-
 function HomePage() {
   const membershipRef = useRef<HTMLDivElement>(null);
   const freePassRef = useRef<HTMLDivElement>(null);
@@ -82,14 +84,12 @@ function HomePage() {
 
   return (
     <>
-      
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
       <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
       <ImageCarousel images={gymImages} />
       <div ref={recoveryRef}>
         <Recovery />
       </div>
-   
       <div ref={membershipRef}>
         <Membership/>
       </div>
@@ -102,24 +102,23 @@ function HomePage() {
   );
 }
 
-function SignUpPage() {
-  return (
-    <SignUpForm />
-  );
-}
-
 function App() {
   return (
     <Router>
-      <GlobalStyle />
-      {location.pathname !== '/signWaiver' && <Navbar />}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/success" element={<SuccessPage />} />
-        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-        <Route path='/signWaiver' element={<SignWaiver/>}/>
-      </Routes>
+      <AdminProvider>
+        <GlobalStyle />
+        {location.pathname !== '/signWaiver' && 
+         !location.pathname.includes('/admin') && <Navbar />}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+          <Route path="/signWaiver" element={<SignWaiver/>} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </AdminProvider>
     </Router>
   );
 }
