@@ -52,7 +52,7 @@ const SearchContainer = styled.div`
   }
 `;
 
-const UsersList = () => {
+const UsersList = (props) => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -124,7 +124,7 @@ const UsersList = () => {
           loading={loading}
           rowKey="id"
           onRow={(record) => ({
-            onClick: () => setSelectedUser(record),
+            onClick: () => {setSelectedUser(record); props.setKeyValue('2')},
           })}
         />
       </TableContainer>

@@ -81,7 +81,7 @@ const AdminLogin = () => {
     try {
       // In a real application, you would make an API call here
       // This is just a mock authentication
-      if (values.email === 'admin@example.com' && values.password === 'admin123') {
+      if (values.email === 'cltlifting' && values.password === 'ADMIN') {
         setUser({
           id: '1',
           email: values.email,
@@ -113,7 +113,7 @@ const AdminLogin = () => {
             name="email"
             rules={[
               { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
+             
             ]}
           >
             <Input prefix={<Mail size={16} />} placeholder="admin@example.com" />

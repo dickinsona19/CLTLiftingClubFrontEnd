@@ -39,9 +39,10 @@ const BackButton = styled(Button)`
   }
 `;
 
-const UserDetails = () => {
+const UserDetails = (props) => {
   const { selectedUser, setSelectedUser } = useAdminStore();
 
+  console.log(selectedUser)
   if (!selectedUser) {
     return null;
   }
@@ -49,7 +50,7 @@ const UserDetails = () => {
   return (
     <DetailsContainer>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <BackButton onClick={() => setSelectedUser(null)}>
+        <BackButton onClick={() => props.setKeyValue('1')}>
           <ArrowLeft size={16} />
           Back to Users
         </BackButton>
@@ -100,8 +101,16 @@ const UserDetails = () => {
               <Descriptions.Item label="Referral Code">
                 {selectedUser.referralCode}
               </Descriptions.Item>
-              <Descriptions.Item label="Referrals Made">
-                {selectedUser.referralsCount || 0}
+              <Descriptions.Item label="Referred Members">
+                {selectedUser.referredMembersDto.length > 0 ? (
+                  <div>
+                    {selectedUser.referredMembersDto.map((member, index) => (
+                      <p key={index}>{member.firstName} {member.lastName}</p>
+                    ))}
+                  </div>
+                ) : (
+                  <p>N/A</p>
+                )}
               </Descriptions.Item>
             </Descriptions>
           </Card>

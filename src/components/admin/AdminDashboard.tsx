@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs } from 'antd';
 import styled from 'styled-components';
@@ -54,6 +54,7 @@ const StyledTabs = styled(Tabs)`
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, selectedUser } = useAdminStore();
+  const [keyValue, setKeyValue] = useState('1');
 
   useEffect(() => {
     if (!user) {
@@ -64,17 +65,19 @@ const AdminDashboard = () => {
   if (!user) {
     return null;
   }
-
+  const onChange = (key: string) => {
+    setKeyValue(key);
+  };
   const items = [
     {
       key: '1',
       label: 'Users',
-      children: <UsersList />,
+      children: <UsersList setKeyValue={setKeyValue} />,
     },
     {
       key: '2',
       label: 'User Details',
-      children: <UserDetails />,
+      children: <UserDetails setKeyValue={setKeyValue}  />,
       disabled: !selectedUser,
     },
   ];
@@ -84,7 +87,7 @@ const AdminDashboard = () => {
       <Header>
         <Title>Admin Dashboard</Title>
       </Header>
-      <StyledTabs defaultActiveKey="1" items={items} />
+      <StyledTabs items={items} activeKey={keyValue} onChange={onChange}/>
     </DashboardContainer>
   );
 };
