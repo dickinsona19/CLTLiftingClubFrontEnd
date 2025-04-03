@@ -288,7 +288,7 @@ const onChange = (e: RadioChangeEvent) => {
             <Features>
                             <Feature>
                 <Calendar size={20} />
-               {contractMonthTime =="No Contract"? <>Month-to-Month Freedom</>:<> Locked in Conract</>}
+               {contractMonthTime =="No Contract"? <>Month-to-Month Freedom</>:<> Locked in Contract</>}
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
@@ -324,7 +324,7 @@ const onChange = (e: RadioChangeEvent) => {
               
               <Feature>
                 <Clock size={20} />
-                Not avalible after May 12th
+                Not available after May 12th
               </Feature>
               <Feature>
                 <Dumbbell size={20} />

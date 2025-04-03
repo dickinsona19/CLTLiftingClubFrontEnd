@@ -17,6 +17,7 @@ import { LocationMap } from './components/LocationMap';
 import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
+import SignWaiver from './components/SignWaiver';
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -111,12 +112,13 @@ function App() {
   return (
     <Router>
       <GlobalStyle />
-      <Navbar/>
+      {location.pathname !== '/signWaiver' && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path='/signWaiver' element={<SignWaiver/>}/>
       </Routes>
     </Router>
   );
