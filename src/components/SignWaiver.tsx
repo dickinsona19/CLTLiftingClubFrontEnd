@@ -111,7 +111,7 @@ const SignWaiver = () => {
         const base64Data = signatureData?.split(',')[1]; // Remove "data:image/png;base64," prefix
       
         try {
-          const response = await fetch(`http://localhost:8082/users/${userId}/waiver`, {
+          const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/waiver`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
