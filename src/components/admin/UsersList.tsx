@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table, Input, Space } from 'antd';
+import { Table, Input, Space, Tag, Tooltip } from 'antd';
 import styled from 'styled-components';
-import { Search } from 'lucide-react';
+import { Search, CheckCircle, XCircle, Copy } from 'lucide-react';
 import { useAdminStore } from '../../contexts/AdminContext';
+import { message } from 'antd';
 
 const TableContainer = styled.div`
   .ant-table {
@@ -52,6 +53,26 @@ const SearchContainer = styled.div`
   }
 `;
 
+const UserAvatar = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const StatusIcon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const ReferralCode = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+`;
+
 const UsersList = (props) => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,16 +95,66 @@ const UsersList = (props) => {
     fetchUsers();
   }, []);
 
+  const handleCopyReferralCode = (e: React.MouseEvent, code: string) => {
+    e.stopPropagation(); // Prevent the row click event
+    navigator.clipboard.writeText(code)
+      .then(() => message.success('Referral code copied to clipboard!'))
+      .catch(() => message.error('Failed to copy referral code'));
+  };
+
+  const getEligibilityStatus = (user: any) => {
+    const issues = [];
+    
+    if (!user.waiverSigned) {
+      issues.push('Waiver not signed');
+    }
+    if (!user.isOver18) {
+      issues.push('Under 18');
+    }
+    if (!user.isEligible) {
+      issues.push('Not eligible');
+    }
+
+    if (issues.length === 0) {
+      return (
+        <StatusIcon>
+          <CheckCircle color="green" size={16} />
+          <span style={{ color: 'green' }}>Eligible</span>
+        </StatusIcon>
+      );
+    }
+
+    return (
+      <Tooltip title={issues.join(', ')}>
+        <StatusIcon>
+          <XCircle color="red" size={16} />
+          <span style={{ color: 'red' }}>Issues Found</span>
+        </StatusIcon>
+      </Tooltip>
+    );
+  };
+
   const columns = [
+    {
+      title: 'Photo',
+      key: 'photo',
+      width: 60,
+      render: (text: any, record: any) => (
+        <UserAvatar 
+          src={record.photoUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=100'} 
+          alt={`${record.firstName} ${record.lastName}`} 
+        />
+      ),
+    },
     {
       title: 'Name',
       key: 'name',
       render: (text: any, record: any) => `${record.firstName} ${record.lastName}`,
     },
     {
-      title: 'Phone',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
+      title: 'Status',
+      key: 'status',
+      render: (text: any, record: any) => getEligibilityStatus(record),
     },
     {
       title: 'Membership',
@@ -91,9 +162,14 @@ const UsersList = (props) => {
       key: 'membershipName',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Referral Code',
+      key: 'referralCode',
+      render: (text: any, record: any) => (
+        <ReferralCode onClick={(e) => handleCopyReferralCode(e, record.referralCode)}>
+          <span>{record.referralCode}</span>
+          <Copy size={16} />
+        </ReferralCode>
+      ),
     },
   ];
 
@@ -124,7 +200,10 @@ const UsersList = (props) => {
           loading={loading}
           rowKey="id"
           onRow={(record) => ({
-            onClick: () => {setSelectedUser(record); props.setKeyValue('2')},
+            onClick: () => {
+              setSelectedUser(record);
+              props.setKeyValue('2');
+            },
           })}
         />
       </TableContainer>
