@@ -256,21 +256,7 @@ const AdminDashboard = () => {
           </UserCount>
         </HeaderLeft>
         <HeaderRight>
-          <Tooltip title="Notifications">
-            <IconButton>
-              <Bell size={18} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Settings">
-            <IconButton>
-              <Settings size={18} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Profile">
-            <IconButton>
-              <User size={18} />
-            </IconButton>
-          </Tooltip>
+
           <Tooltip title="Logout">
             <IconButton onClick={handleLogout}>
               <LogOut size={18} />
