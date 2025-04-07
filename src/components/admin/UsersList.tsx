@@ -202,7 +202,7 @@ const UsersList = (props) => {
           onRow={(record) => ({
             onClick: () => {
               setSelectedUser(record);
-              props.setKeyValue('2');
+
             },
           })}
         />

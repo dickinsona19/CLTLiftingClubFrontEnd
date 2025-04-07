@@ -65,6 +65,10 @@ const StyledInput = styled(Input)`
   &:hover {
     background: rgba(255, 255, 255, 0.1);
   }
+
+  &:use {
+    background: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const ActionButtons = styled(Space)`
