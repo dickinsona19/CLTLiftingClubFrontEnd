@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { MapPin, Phone } from 'lucide-react';
+import { Clock, MapPin, Phone } from 'lucide-react';
 
 const Section = styled.section`
   padding: 8rem 2rem;
@@ -192,6 +192,18 @@ export const LocationMap = () => {
               <InfoText>
                 Phone: (704) 420-9417<br />
                 Email: cltlifting@cltliftingclub.com
+              </InfoText>
+            </InfoContent>
+          </InfoItem>
+          <InfoItem>
+            <IconWrapper>
+              <Clock size={24} />
+            </IconWrapper>
+            <InfoContent>
+              <InfoTitle>Hours</InfoTitle>
+              <InfoText>
+                M-T: 5 AM - 11PM, F: 5AM - 9PM<br />
+                Saturday: 7AM - 9PM, Sunday: 9AM - 9PM
               </InfoText>
             </InfoContent>
           </InfoItem>

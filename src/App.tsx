@@ -85,12 +85,15 @@ function HomePage() {
   return (
     <>
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
+      <div ref={membershipRef}>
+        <Membership/>
+      </div>
       <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
       <ImageCarousel images={gymImages} />
       <div ref={recoveryRef}>
         <Recovery />
       </div>
-      <div ref={membershipRef}>
+      <div >
         <Membership/>
       </div>
       <LocationMap/>

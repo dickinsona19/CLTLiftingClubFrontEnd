@@ -132,9 +132,9 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            New Members
+            Founding Members
             <br />
-            <Emphasis>Starting at $79 per month!</Emphasis>
+            <Emphasis>Starting at $89 per month!</Emphasis>
           </Statement>
           <CTAContainer
             initial={{ opacity: 0, y: 20 }}

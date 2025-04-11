@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
-import { Flex, Radio, RadioChangeEvent } from 'antd';
-import { useState } from 'react';
+// import { Flex, Radio, RadioChangeEvent } from 'antd';
+// import { useState } from 'react';
 import BigWeight from '../assets/BigWeight.jpg'
 const Section = styled.section`
   min-height: 100vh;
@@ -14,6 +14,7 @@ const Section = styled.section`
   color: white;
   display: flex;
   align-items: center;
+  justify-content: center; /* Center the plan card */
 
   @media (min-width: 769px) {
     background-attachment: fixed; /* Fixed only on desktop */
@@ -84,6 +85,7 @@ const PlanCard = styled(motion.div)`
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
+  text-align: center; /* Center the text */
 
   &:hover {
     transform: translateY(-10px);
@@ -123,19 +125,14 @@ const ActivationFee = styled.div`
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
 `;
-
-const PaymentNote = styled.div`
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 2rem;
-  font-style: italic;
-`;
-
 const Features = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0 0 2rem;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Feature = styled.li`
@@ -198,10 +195,10 @@ const MaintenanceFee = styled.div`
 
 
 export const Membership = () => {
-const [contractMonthTime, setContractMonthTime] = useState("12 Month")
-const onChange = (e: RadioChangeEvent) => {
-  setContractMonthTime(e.target.value);
-};
+//  const [contractMonthTime, setContractMonthTime] = useState("12 Month")
+// const onChange = (e: RadioChangeEvent) => {
+//   setContractMonthTime(e.target.value);
+// };
   return (
     <Section>
       <Container>
@@ -210,7 +207,7 @@ const onChange = (e: RadioChangeEvent) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Choose Your Path
+          Sign up Now
         </Title>
         <Subtitle
           initial={{ opacity: 0, y: 30 }}
@@ -221,8 +218,8 @@ const onChange = (e: RadioChangeEvent) => {
           Select the membership that matches your commitment to excellence. 
           Join our community of dedicated athletes and transform your potential into power.
         </Subtitle>
-        <Grid>
-          <PlanCard
+        {/* <Grid> */}
+          {/* <PlanCard
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -304,7 +301,7 @@ const onChange = (e: RadioChangeEvent) => {
               <Lock size={18} />
               Coming Soon
             </Button>
-          </PlanCard>
+          </PlanCard> */}
           
 
           <PlanCard
@@ -324,7 +321,7 @@ const onChange = (e: RadioChangeEvent) => {
               
               <Feature>
                 <Clock size={20} />
-                Not available after May 12th
+                Price lock for first 100 members
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
@@ -337,14 +334,14 @@ const onChange = (e: RadioChangeEvent) => {
             </Features>
             <Link to="/signup" style={{ textDecoration: 'none' }}>
               <Button>
-                Limited Time
+                Sign up
               </Button>
             </Link>
           </PlanCard>
         
 
 
-          <PlanCard
+          {/* <PlanCard
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -359,10 +356,10 @@ const onChange = (e: RadioChangeEvent) => {
                 <Calendar size={20} />
                 12-Month Commitment
               </Feature>
-              {/* <Feature>
+              <Feature>
                 <Clock size={20} />
                 24/7 Access
-              </Feature> */}
+              </Feature>
               <Feature>
                 <Dumbbell size={20} />
                 All Equipment Access
@@ -377,11 +374,11 @@ const onChange = (e: RadioChangeEvent) => {
               <Lock size={18} />
               Coming Soon
             </Button>
-          </PlanCard>
+          </PlanCard> */}
 
           
           
-        </Grid>
+        {/* </Grid> */}
 
         <MaintenanceFee>
           <p>All memberships include a bi-annual maintenance fee of $49.99 charged in January and June</p>

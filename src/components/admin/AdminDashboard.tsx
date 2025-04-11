@@ -6,7 +6,7 @@ import { useAdminStore } from '../../contexts/AdminContext';
 import UsersList from './UsersList';
 import UserDetails from './UserDetails';
 import ProductsManager from './ProductsManager';
-import { CheckCircle, XCircle, LogOut, Bell, Settings, User } from 'lucide-react';
+import { CheckCircle, XCircle, LogOut } from 'lucide-react';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
