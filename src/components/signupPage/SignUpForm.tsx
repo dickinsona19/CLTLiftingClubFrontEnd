@@ -423,7 +423,7 @@ export const SignUpForm: React.FC = () => {
             }
 
             <MaintenanceFeeNote>
-              Note: All memberships include a bi-annual maintenance fee of $49.99 charged in January and June
+              Note: All memberships include a bi-annual maintenance fee of $59.99 charged in January and June
             </MaintenanceFeeNote>
 
             <Form.Item name="termsAndConditions" valuePropName="checked" rules={[{ required: true, message: 'Please accept the terms and conditions' }]}>
