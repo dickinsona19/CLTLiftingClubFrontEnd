@@ -116,7 +116,7 @@ const SignWaiver = () => {
       formData.append("file", blob, "signature.png");
     
       try {
-        const response = await fetch(`http://localhost:8082/users/${userId}/waiver`, {
+        const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/waiver`, {
           method: 'POST',
           body: formData,
         });
