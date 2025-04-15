@@ -381,7 +381,7 @@ export const Membership = () => {
         {/* </Grid> */}
 
         <MaintenanceFee>
-          <p>All memberships include a bi-annual maintenance fee of $49.99 charged in January and June</p>
+          <p>All memberships include a bi-annual maintenance fee of $59.99 charged in January and June</p>
         </MaintenanceFee>
       </Container>
     </Section>

@@ -188,11 +188,50 @@ const StyledTabs = styled(Tabs)`
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, selectedUser, setUser } = useAdminStore();
+  const { user, selectedUser, setSelectedUser } = useAdminStore();
   const [keyValue, setKeyValue] = useState('1');
   const [totalUsers, setTotalUsers] = useState(0);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState(false);
 
+  
+  useEffect(() => {
+    let tempBuffer = '';
+  
+    const handleKeyPress = (e: KeyboardEvent) => {
+  
+      if (e.key === 'Enter') {
+        const scannedCode = tempBuffer.trim();
+        console.log('Scanned:', scannedCode);
+  
+        if (scannedCode) {
+          fetch(`https://boss-lifting-club-api.onrender.com/users/barcode/${scannedCode}`)
+            .then(res => {
+              console.log(res);
+              return res.json();
+            })
+            .then(data => {
+              if (data) {
+                console.log(data)
+                setSelectedUser(data)
+              }
+            })
+            .catch(err => {
+              console.error('Error fetching scanned user:', err);
+            });
+        }
+  
+        tempBuffer = '';  // Clear buffer after submit.
+      } else if (/^[a-zA-Z0-9]$/.test(e.key)) {
+        tempBuffer += e.key.toUpperCase();  // Add only valid chars, uppercase.
+      }
+    };
+  
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+  
   useEffect(() => {
     if (!user) {
       navigate('/admin');

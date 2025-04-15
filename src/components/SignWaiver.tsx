@@ -104,35 +104,34 @@ const SignWaiver = () => {
     };
   
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!hasSignature || !hasAgreed) return;
-      
-        const signatureData = canvasRef.current?.toDataURL(); // Base64 string
-        const base64Data = signatureData?.split(',')[1]; // Remove "data:image/png;base64," prefix
-      
-        try {
-          const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/waiver`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId,
-              signature: base64Data, // Send only the Base64 data without prefix
-            }),
-          });
-      
-          if (response.ok) {
-            setSubmitted(true);
-            console.log('Signature successfully submitted');
-          } else {
-            console.error('Failed to submit signature');
-          }
-        } catch (error) {
-          console.error('Error submitting signature:', error);
+      e.preventDefault();
+      if (!hasSignature || !hasAgreed) return;
+    
+      const signatureData = canvasRef.current?.toDataURL("image/png");
+    
+      if (!signatureData) return;
+    
+      const blob = await (await fetch(signatureData)).blob();
+      const formData = new FormData();
+      formData.append("file", blob, "signature.png");
+    
+      try {
+        const response = await fetch(`http://localhost:8082/users/${userId}/waiver`, {
+          method: 'POST',
+          body: formData,
+        });
+    
+        if (response.ok) {
+          setSubmitted(true);
+          console.log('Signature successfully submitted');
+        } else {
+          console.error('Failed to submit signature');
         }
-      };
-  
+      } catch (error) {
+        console.error('Error submitting signature:', error);
+      }
+    };
+    
     if (submitted) {
       return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
