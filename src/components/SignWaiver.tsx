@@ -131,7 +131,7 @@ const SignWaiver = () => {
         console.error('Error submitting signature:', error);
       }
 
-      window.location.href = 'cltliftingclub://waiver-complete?userId=' +userId;
+      window.location.href = 'cltliftingclub://?userId=' +userId;
     };
     
     if (submitted) {
