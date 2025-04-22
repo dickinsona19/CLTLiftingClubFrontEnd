@@ -1,7 +1,6 @@
-import { Modal, Select, InputNumber, Form, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { Modal, Select, InputNumber, Form, message, Spin } from 'antd';
 import styled from 'styled-components';
-import { useState } from 'react';
-import { mockProducts } from '../../mockData/products';
 
 const StyledModal = styled(Modal)`
   .ant-modal-content {
@@ -25,9 +24,11 @@ const StyledModal = styled(Modal)`
   .ant-form-item-label > label {
     color: white;
   }
-`;
+  `
+;
 
-const ProductSelect = styled(Select)`
+const ProductSelect = styled(Select)
+`
   .ant-select-selector {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -41,34 +42,43 @@ const ProductSelect = styled(Select)`
   .ant-select-arrow {
     color: rgba(255, 255, 255, 0.5);
   }
-`;
+  `
+;
 
-const ProductOption = styled.div`
+const ProductOption = styled.div
+`
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 0.5rem;
-`;
+  `
+;
 
-const ProductImage = styled.img`
+const ProductImage = styled.img
+`
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 4px;
-`;
+  `
+;
 
 const ProductInfo = styled.div`
   flex: 1;
-`;
+  `
+;
 
-const ProductName = styled.div`
+const ProductName = styled.div
+`
   font-weight: 500;
-`;
+  `
+;
 
 const ProductPrice = styled.div`
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
-`;
+  `
+;
 
 const StyledInputNumber = styled(InputNumber)`
   width: 100%;
@@ -92,7 +102,8 @@ const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-down-inner {
     color: rgba(255, 255, 255, 0.5) !important;
   }
-`;
+  `
+;
 
 const TotalAmount = styled.div`
   margin-top: 1rem;
@@ -112,7 +123,8 @@ const TotalAmount = styled.div`
     font-weight: 600;
     color: white;
   }
-`;
+  `
+;
 
 interface PurchaseModalProps {
   isVisible: boolean;
@@ -122,11 +134,34 @@ interface PurchaseModalProps {
 
 const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
   const [form] = Form.useForm();
+  const [products, setProducts] = useState<any[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const API_URL = 'https://boss-lifting-club-api.onrender.com/products'; // Replace with your actual URL
+
+  useEffect(() => {
+    if (isVisible) fetchProducts();
+  }, [isVisible]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('Failed to fetch products');
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
+      message.error('Could not load products');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleProductSelect = (value: string) => {
-    const product = mockProducts.find(p => p.id === value);
+    const product = products.find(p => p.id === value);
     setSelectedProduct(product);
     setQuantity(1);
   };
@@ -135,9 +170,10 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
     try {
       const values = await form.validateFields();
       const total = selectedProduct.price * quantity;
+      await fetch(`${API_URL}/purchase?productId=${values.productId}&stripeCustomerId=${userId}&quantity=${values.quantity}`, {
+        method: 'POST',
+      });
 
-      // Here you would typically make an API call to process the purchase
-      // For now, we'll just simulate a successful purchase
       message.success(`Purchase successful! Total: $${total.toFixed(2)}`);
       form.resetFields();
       setSelectedProduct(null);
@@ -157,55 +193,64 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
       okText="Complete Purchase"
       cancelText="Cancel"
     >
-      <Form form={form} layout="vertical">
-        <Form.Item
-          name="productId"
-          label="Select Product"
-          rules={[{ required: true, message: 'Please select a product' }]}
-        >
-          <ProductSelect
-            placeholder="Choose a product"
-            onChange={handleProductSelect}
-            optionLabelProp="label"
+      {loading ? (
+        <Spin tip="Loading products..." />
+      ) : (
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="productId"
+            label="Select Product"
+            rules={[{ required: true, message: 'Please select a product' }]}
           >
-            {mockProducts.map(product => (
-              <Select.Option 
-                key={product.id} 
-                value={product.id}
-                label={product.name}
-              >
-                <ProductOption>
-                  <ProductImage src={product.imageUrl} alt={product.name} />
-                  <ProductInfo>
-                    <ProductName>{product.name}</ProductName>
-                    <ProductPrice>${product.price.toFixed(2)}</ProductPrice>
-                  </ProductInfo>
-                </ProductOption>
-              </Select.Option>
-            ))}
-          </ProductSelect>
-        </Form.Item>
+            <ProductSelect
+              placeholder="Choose a product"
+              onChange={handleProductSelect}
+              optionLabelProp="label"
+              getPopupContainer={trigger => trigger.parentElement} // fixes scroll
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label as string).toLowerCase().includes(input.toLowerCase())
+              }
+            >
+              {products.map(product => (
+                <Select.Option
+                  key={product.id}
+                  value={product.id}
+                  label={product.name}
+                >
+                  <ProductOption>
+                    <ProductImage src={product.imageUrl} alt={product.name} />
+                    <ProductInfo>
+                      <ProductName>{product.name}</ProductName>
+                      <ProductPrice>${product.price.toFixed(2)}</ProductPrice>
+                    </ProductInfo>
+                  </ProductOption>
+                </Select.Option>
+              ))}
+            </ProductSelect>
+          </Form.Item>
 
-        <Form.Item
-          name="quantity"
-          label="Quantity"
-          rules={[{ required: true, message: 'Please enter quantity' }]}
-        >
-          <StyledInputNumber
-            min={1}
-            max={10}
-            value={quantity}
-            onChange={value => setQuantity(value)}
-          />
-        </Form.Item>
+          <Form.Item
+            name="quantity"
+            label="Quantity"
+            rules={[{ required: true, message: 'Please enter quantity' }]}
+          >
+            <StyledInputNumber
+              min={1}
+              max={10}
+              value={quantity}
+              onChange={value => setQuantity(value)}
+            />
+          </Form.Item>
 
-        {selectedProduct && (
-          <TotalAmount>
-            <span>Total Amount:</span>
-            <span>${(selectedProduct.price * quantity).toFixed(2)}</span>
-          </TotalAmount>
-        )}
-      </Form>
+          {selectedProduct && (
+            <TotalAmount>
+              <span>Total Amount:</span>
+              <span>${(selectedProduct.price * quantity).toFixed(2)}</span>
+            </TotalAmount>
+          )}
+        </Form>
+      )}
     </StyledModal>
   );
 };

@@ -1,11 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Tabs, Select } from 'antd';
 import { PlusCircle, Trash2, Edit, ShoppingBag } from 'lucide-react';
 import styled from 'styled-components';
-import { mockProducts } from '../../mockData/products';
 import { useAdminStore } from '../../contexts/AdminContext';
 import PurchaseModal from './PurchaseModal';
-
 const Container = styled.div`
   .ant-table {
     background: rgba(255, 255, 255, 0.05);
@@ -81,7 +79,7 @@ const StyledModal = styled(Modal)`
   .ant-input, .ant-select-selector {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
+    color: black !important;
 
     &:hover, &:focus {
       border-color: rgba(255, 255, 255, 0.3) !important;
@@ -140,7 +138,7 @@ const CATEGORIES = {
 };
 
 const ProductsManager = () => {
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPurchaseModalVisible, setIsPurchaseModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -149,40 +147,71 @@ const ProductsManager = () => {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES.DRINKS);
   const { selectedUser } = useAdminStore();
 
+  const API_URL = 'https://boss-lifting-club-api.onrender.com/products';
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('Failed to fetch products');
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
+      message.error('Could not load products');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddEdit = async (values) => {
     try {
       if (editingProduct) {
-        // Update existing product
-        const updatedProducts = products.map(p => 
-          p.id === editingProduct.id ? { ...values, id: p.id } : p
-        );
-        setProducts(updatedProducts);
+        // PUT to update
+        const res = await fetch(`${API_URL}/${editingProduct.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        });
+
+        if (!res.ok) throw new Error('Failed to update product');
+        const updated = await res.json();
+        setProducts(products.map(p => (p.id === editingProduct.id ? updated : p)));
         message.success('Product updated successfully');
       } else {
-        // Add new product
-        const newProduct = {
-          ...values,
-          id: (Math.max(...products.map(p => parseInt(p.id))) + 1).toString(),
-          category: values.category || activeCategory
-        };
+        // POST to add
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...values, category: values.category || activeCategory }),
+        });
+
+        if (!res.ok) throw new Error('Failed to add product');
+        const newProduct = await res.json();
         setProducts([...products, newProduct]);
         message.success('Product added successfully');
       }
-      setIsModalVisible(false);
+
       form.resetFields();
-    } catch (error) {
-      console.error('Error saving product:', error);
-      message.error('Failed to save product');
+      setIsModalVisible(false);
+    } catch (err) {
+      console.error(err);
+      message.error('Error saving product');
     }
   };
 
   const handleDelete = async (id) => {
     try {
-      const updatedProducts = products.filter(p => p.id !== id);
-      setProducts(updatedProducts);
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
+      setProducts(products.filter(p => p.id !== id));
       message.success('Product deleted successfully');
-    } catch (error) {
-      console.error('Error deleting product:', error);
+    } catch (err) {
+      console.error(err);
       message.error('Failed to delete product');
     }
   };
@@ -192,32 +221,18 @@ const ProductsManager = () => {
       title: 'Image',
       key: 'image',
       render: (text, record) => (
-        <ProductImage src={record.imageUrl || 'https://via.placeholder.com/50'} alt={record.name} />
+        <img src={record.imageUrl} alt={record.name} style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 4 }} />
       ),
     },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      render: (price) => `$${price?.toFixed(2) || '0.00'}`,
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-      ellipsis: true,
-    },
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Price', dataIndex: 'price', key: 'price', render: price => `$${price?.toFixed(2)}` },
+    { title: 'Description', dataIndex: 'definition', key: 'definition', ellipsis: true },
     {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <Space>
-          <ActionButton
+          <Button
             icon={<Edit size={16} />}
             onClick={() => {
               setEditingProduct(record);
@@ -226,28 +241,28 @@ const ProductsManager = () => {
             }}
           />
           <Popconfirm
-            title="Are you sure you want to delete this product?"
+            title="Are you sure?"
             onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <ActionButton icon={<Trash2 size={16} />} />
+            <Button icon={<Trash2 size={16} />} />
           </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  const filteredProducts = products.filter(product => product.category === activeCategory);
+  const filteredProducts = products.filter(p => p.category === activeCategory);
 
   const items = Object.values(CATEGORIES).map(category => ({
     key: category,
     label: category,
     children: (
       <>
-        <ActionBar>
+        <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
-            <ActionButton
+            <Button
               icon={<PlusCircle size={16} />}
               onClick={() => {
                 setEditingProduct(null);
@@ -256,34 +271,22 @@ const ProductsManager = () => {
               }}
             >
               Add Product
-            </ActionButton>
+            </Button>
             {selectedUser && (
-              <ActionButton
-                icon={<ShoppingBag size={16} />}
-                onClick={() => setIsPurchaseModalVisible(true)}
-              >
+              <Button icon={<ShoppingBag size={16} />} onClick={() => setIsPurchaseModalVisible(true)}>
                 Purchase Products
-              </ActionButton>
+              </Button>
             )}
           </Space>
-        </ActionBar>
-        <Table
-          columns={columns}
-          dataSource={filteredProducts}
-          loading={loading}
-          rowKey="id"
-        />
+        </div>
+        <Table columns={columns} dataSource={filteredProducts} rowKey="id" loading={loading} />
       </>
     ),
   }));
 
   return (
     <Container>
-      <StyledTabs 
-        items={items} 
-        onChange={(key) => setActiveCategory(key)}
-        defaultActiveKey={CATEGORIES.DRINKS}
-      />
+      <StyledTabs items={items} onChange={setActiveCategory} defaultActiveKey={CATEGORIES.DRINKS} />
 
       <StyledModal
         title={editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -294,25 +297,11 @@ const ProductsManager = () => {
           form.resetFields();
         }}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleAddEdit}
-          initialValues={{ category: activeCategory }}
-        >
-          <Form.Item
-            name="name"
-            label="Product Name"
-            rules={[{ required: true, message: 'Please enter product name' }]}
-          >
+        <Form form={form} layout="vertical" onFinish={handleAddEdit} initialValues={{ category: activeCategory }}>
+          <Form.Item name="name" label="Product Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-
-          <Form.Item
-            name="category"
-            label="Category"
-            rules={[{ required: true, message: 'Please select a category' }]}
-          >
+          <Form.Item name="category" label="Category" rules={[{ required: true }]}>
             <Select>
               {Object.values(CATEGORIES).map(category => (
                 <Select.Option key={category} value={category}>
@@ -321,38 +310,19 @@ const ProductsManager = () => {
               ))}
             </Select>
           </Form.Item>
-
-          <Form.Item
-            name="price"
-            label="Price"
-            rules={[{ required: true, message: 'Please enter price' }]}
-          >
+          <Form.Item name="price" label="Price" rules={[{ required: true }]}>
             <Input type="number" prefix="$" />
           </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please enter description' }]}
-          >
+          <Form.Item name="definition" label="Description" rules={[{ required: true }]}>
             <Input.TextArea rows={4} />
           </Form.Item>
-
-          <Form.Item
-            name="imageUrl"
-            label="Image URL"
-            rules={[{ required: true, message: 'Please enter image URL' }]}
-          >
+          <Form.Item name="imageUrl" label="Image URL" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
         </Form>
       </StyledModal>
 
-      <PurchaseModal
-        isVisible={isPurchaseModalVisible}
-        onClose={() => setIsPurchaseModalVisible(false)}
-        userId={selectedUser?.id}
-      />
+      <PurchaseModal isVisible={isPurchaseModalVisible} onClose={() => setIsPurchaseModalVisible(false)} userId={selectedUser?.stripeCustomerId} />
     </Container>
   );
 };
