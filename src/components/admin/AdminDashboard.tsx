@@ -323,16 +323,16 @@ const AdminDashboard = () => {
             </UserMetadata>
           </UserInfo>
           <Space>
-            <StatusTag $type={selectedUser.waiverSigned ? 'success' : 'error'}>
-              {selectedUser.waiverSigned ? <CheckCircle size={14} /> : <XCircle size={14} />}
+            <StatusTag $type={selectedUser.signatureData ? 'success' : 'error'}>
+              {selectedUser.signatureData ? <CheckCircle size={14} /> : <XCircle size={14} />}
               Waiver
             </StatusTag>
-            <StatusTag $type={selectedUser.isOver18 ? 'success' : 'error'}>
-              {selectedUser.isOver18 ? <CheckCircle size={14} /> : <XCircle size={14} />}
+            <StatusTag $type={selectedUser.over18 ? 'success' : 'error'}>
+              {selectedUser.over18 ? <CheckCircle size={14} /> : <XCircle size={14} />}
               Age 18+
             </StatusTag>
-            <StatusTag $type={selectedUser.isEligible ? 'success' : 'error'}>
-              {selectedUser.isEligible ? <CheckCircle size={14} /> : <XCircle size={14} />}
+            <StatusTag $type={selectedUser.isInGoodStanding ? 'success' : 'error'}>
+              {selectedUser.isInGoodStanding ? <CheckCircle size={14} /> : <XCircle size={14} />}
               Eligible
             </StatusTag>
           </Space>
