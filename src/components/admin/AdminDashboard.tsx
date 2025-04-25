@@ -293,6 +293,9 @@ const AdminDashboard = () => {
             <label>Total Users</label>
             <span>{totalUsers}</span>
           </UserCount>
+        <Button variant="contained" color="primary" onClick={()=>console.log("HEllo")}>
+          Open CLT Lifting Club
+        </Button>
         </HeaderLeft>
         <HeaderRight>
 
