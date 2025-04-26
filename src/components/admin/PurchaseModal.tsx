@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Select, InputNumber, Form, message, Spin } from 'antd';
 import styled from 'styled-components';
-
+import { useAdminStore } from '../../contexts/AdminContext';
 const StyledModal = styled(Modal)`
   .ant-modal-content {
     background: #2a2a2a;
@@ -133,6 +133,7 @@ interface PurchaseModalProps {
 }
 
 const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
+  const { selectedUser, setSelectedUser } = useAdminStore();
   const [form] = Form.useForm();
   const [products, setProducts] = useState<any[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
@@ -165,14 +166,14 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
     setSelectedProduct(product);
     setQuantity(1);
   };
-
   const handlePurchase = async () => {
     try {
       const values = await form.validateFields();
       const total = selectedProduct.price * quantity;
-      await fetch(`${API_URL}/purchase?productId=${values.productId}&stripeCustomerId=${userId}&quantity=${values.quantity}`, {
+      await fetch(`${API_URL}/purchaseProduct?productId=${values.productId}&stripeCustomerId=${selectedUser.userStripeMemberId}&quantity=${values.quantity}`, {
         method: 'POST',
       });
+      
 
       message.success(`Purchase successful! Total: $${total.toFixed(2)}`);
       form.resetFields();
