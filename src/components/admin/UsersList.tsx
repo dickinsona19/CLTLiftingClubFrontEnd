@@ -105,13 +105,13 @@ const UsersList = (props) => {
   const getEligibilityStatus = (user: any) => {
     const issues = [];
     
-    if (!user.waiverSigned) {
+    if (!user.signatureData) {
       issues.push('Waiver not signed');
     }
-    if (!user.isOver18) {
+    if (!user.over18) {
       issues.push('Under 18');
     }
-    if (!user.isEligible) {
+    if (!user.isInGoodStanding) {
       issues.push('Not eligible');
     }
 
@@ -141,7 +141,7 @@ const UsersList = (props) => {
       width: 60,
       render: (text: any, record: any) => (
         <UserAvatar 
-          src={record.photoUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=100'} 
+          src={record.profilePictureUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=100'} 
           alt={`${record.firstName} ${record.lastName}`} 
         />
       ),

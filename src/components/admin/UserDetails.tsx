@@ -192,6 +192,10 @@ const UserDetails = (props) => {
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>User Information</span>
             <div>
+              <span>Stripe Account: </span>
+              <a href={`https://dashboard.stripe.com/customers/${selectedUser.userStripeMemberId}`} target="_blank" rel="noopener noreferrer">Click Here</a>
+              </div>
+            <div>
               <span>Over 18: </span>
               {selectedUser.over18? <>True</>:<Button type="primary" onClick={()=>updateUserOver18(selectedUser.id)}>Confirm 18 +</Button>}
             </div>
