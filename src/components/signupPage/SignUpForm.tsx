@@ -391,7 +391,7 @@ export const SignUpForm: React.FC = () => {
         <BenefitsList>
           <BenefitItem>
             <Star size={16} />
-            <span>24/7 Access to Facility</span>
+            <span>Hours 5-11</span>
           </BenefitItem>
           <BenefitItem>
             <Star size={16} />
