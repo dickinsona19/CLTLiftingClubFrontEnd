@@ -207,8 +207,8 @@ const TermsAndConditions = () => {
     <Section>
       <SectionTitle>7. Payment Terms</SectionTitle>
       <List>
-        <li><strong>Membership Fees:</strong> Fees are charged monthly on your signup date via Stripe. Your locked-in rate is either $89.99/month, $99.99/month, or $109.99/month, plus a 5% tax/tech fee. Additionally, a $59.99 charge applies on July 1st and January 1st, plus a 5% tax/tech fee. The current fee structure will be provided at signup and may be updated with 30 days’ notice.</li>
-        <li><strong>Non-Refundable:</strong> Fees are non-refundable except as outlined in our cancellation policy (Section 8).</li>
+      <li><strong>Membership Fees:</strong> A one-time signup fee of $50.00, plus a 5% tax/tech fee, is charged at registration. Membership fees are then charged monthly on your signup date via Stripe. Your locked-in rate is either $89.99/month, $99.99/month, or $109.99/month, plus a 5% tax/tech fee. Additionally, a $59.99 charge applies on July 1st and January 1st, plus a 5% tax/tech fee. The current fee structure will be provided at signup and may be updated with 30 days’ notice.</li>
+      <li><strong>Non-Refundable:</strong> Fees are non-refundable except as outlined in our cancellation policy (Section 8).</li>
         <li><strong>Failed Payments:</strong> If a payment fails, we will attempt to reprocess it. Persistent failure may result in membership suspension until resolved. You are responsible for any fees incurred due to failed payment attempts.</li>
         <li><strong>Late Fees:</strong> Late payments may incur a fee of $10 per attempt, communicated via email to the address on file.</li>
         <li><strong>Authorization:</strong> By providing payment information, you authorize CLT Lifting Club and Stripe to charge your card for all applicable fees, including membership dues and additional services.</li>
