@@ -6,7 +6,16 @@ import PhonenumberModal from './PhoneNumberModal';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-
+import { 
+  BannerContainer, 
+  PriceCard, 
+  PriceHeading, 
+  PriceAmount, 
+  PriceDetail,
+  FounderTag,
+  BenefitsList,
+  BenefitItem
+} from './styles';
 const FormContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
@@ -68,16 +77,15 @@ const PriceBanner = styled(motion.div)`
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   h2 {
-    font-size: 4rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 600;
     color: white;
     margin-bottom: 1rem;
     text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
       @media (max-width: 550px) {
       font-size: 3rem;
   }
-  }
-    
+}    
   p {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.25rem;
@@ -354,21 +362,52 @@ export const SignUpForm: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <PriceBanner
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <h2>$89/Month</h2>
-            <p>Sign up now for our exclusive Founders Month-to-Month membership!</p>
-          </PriceBanner>
 
-          <SpecialOffer
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Star />
-            <p>Special Pre-Opening Offer: We will not charge you until the gym opens!</p>
-          </SpecialOffer>
+          <BannerContainer >
+      <PriceCard 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        whileHover={{ scale: 1.02, boxShadow: '0 25px 50px rgba(0, 0, 0, 0.2)' }}
+      >
+        <FounderTag>
+          <Star size={14} />
+          <span>Founding Member</span>
+        </FounderTag>
+        
+        <PriceHeading>CLT Lifting Club</PriceHeading>
+        
+        <PriceAmount>
+          <span className="currency">$</span>
+          <span className="amount">99</span>
+          <span className="period">/month</span>
+        </PriceAmount>
+        
+        <PriceDetail>
+          <span className="label">Activation Fee</span>
+          <span className="value">$50</span>
+        </PriceDetail>
+        
+        <BenefitsList>
+          <BenefitItem>
+            <Star size={16} />
+            <span>24/7 Access to Facility</span>
+          </BenefitItem>
+          <BenefitItem>
+            <Star size={16} />
+            <span>Premium Equipment</span>
+          </BenefitItem>
+          <BenefitItem>
+            <Star size={16} />
+            <span>Founder Status Benefits</span>
+          </BenefitItem>
+          <BenefitItem>
+            <Star size={16} />
+            <span>Community Events</span>
+          </BenefitItem>
+        </BenefitsList>
+      </PriceCard>
+    </BannerContainer>
 
          
         </PromoBanners>
@@ -423,7 +462,7 @@ export const SignUpForm: React.FC = () => {
             }
 
             <MaintenanceFeeNote>
-              Note: All memberships include a bi-annual maintenance fee of $59.99 charged in January and June
+              Note: All memberships include a bi-annual maintenance fee of $59.99 charged in January and July
             </MaintenanceFeeNote>
 
             <Form.Item name="termsAndConditions" valuePropName="checked" rules={[{ required: true, message: 'Please accept the terms and conditions' }]}>

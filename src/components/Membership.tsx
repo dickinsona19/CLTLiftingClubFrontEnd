@@ -311,8 +311,8 @@ export const Membership = () => {
             transition={{ delay: 0.4 }}
           >
             <PlanName>Founding Member</PlanName>
-            <Price>$89 <span>/ month</span></Price>
-            <ActivationFee>No Activation Fee</ActivationFee>
+            <Price>$99 <span>/ month</span></Price>
+            <ActivationFee>$50 Activation Fee</ActivationFee>
             <Features>
               {/* <Feature>
                 <Star size={20} />
@@ -321,7 +321,7 @@ export const Membership = () => {
               
               <Feature>
                 <Clock size={20} />
-                Price lock for first 100 members
+                Limited Time Offer
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
