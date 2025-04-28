@@ -196,7 +196,7 @@ const TermsAndConditions = () => {
     <Section>
       <SectionTitle>6. Facility Access & Rules</SectionTitle>
       <List>
-        <li><strong>Access:</strong> Members have 24/7 access to the gym facilities using their authorized credentials (e.g., key fob, mobile app code). Access is limited to the member and may not be shared with non-members.</li>
+        <li><strong>Access:</strong> Members can enjoy gym facilities from 5 AM to 11 PM with their authorized credentials (e.g., key fob, mobile app code). Access is limited to the member and may not be shared with non-members.</li>
         <li><strong>Safety Protocols:</strong> All members must follow gym safety protocols and equipment usage guidelines, including but not limited to proper attire, equipment handling, and cleaning procedures. Failure to comply may result in suspension or termination of membership.</li>
         <li><strong>Personal Training:</strong> Personal training services are available at an additional cost and are subject to separate agreements with certified trainers.</li>
         <li><strong>Guest Policy:</strong> Guests are not permitted unless explicitly authorized by CLT Lifting Club in writing. Members are responsible for the conduct of any approved guests.</li>
@@ -207,7 +207,7 @@ const TermsAndConditions = () => {
     <Section>
       <SectionTitle>7. Payment Terms</SectionTitle>
       <List>
-        <li><strong>Membership Fees:</strong> Fees are charged monthly on your signup date via Stripe. The current fee structure will be provided at signup and may be updated with 30 days’ notice.</li>
+        <li><strong>Membership Fees:</strong> Fees are charged monthly on your signup date via Stripe. Your locked-in rate is either $89.99/month, $99.99/month, or $109.99/month, plus a 5% tax/tech fee. Additionally, a $59.99 charge applies on July 1st and January 1st, plus a 5% tax/tech fee. The current fee structure will be provided at signup and may be updated with 30 days’ notice.</li>
         <li><strong>Non-Refundable:</strong> Fees are non-refundable except as outlined in our cancellation policy (Section 8).</li>
         <li><strong>Failed Payments:</strong> If a payment fails, we will attempt to reprocess it. Persistent failure may result in membership suspension until resolved. You are responsible for any fees incurred due to failed payment attempts.</li>
         <li><strong>Late Fees:</strong> Late payments may incur a fee of $10 per attempt, communicated via email to the address on file.</li>

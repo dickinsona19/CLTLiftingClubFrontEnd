@@ -210,7 +210,7 @@ export const Membership = () => {
           Sign up Now
         </Title>
         <Subtitle
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 30 }} 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
