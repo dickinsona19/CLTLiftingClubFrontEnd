@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 const SignWaiver = () => {
     const [searchParams] = useSearchParams();
     const userId = searchParams.get('userId');
+    const isPotentialUser = searchParams.get('isPotentialUser') === 'true' || false;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [hasSignature, setHasSignature] = useState(false);
@@ -13,7 +14,6 @@ const SignWaiver = () => {
     const [submitted, setSubmitted] = useState(false);
     const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
     const [isWaiverExpanded, setIsWaiverExpanded] = useState(true);
-
 
     console.log(userId)
     useEffect(() => {
@@ -114,7 +114,22 @@ const SignWaiver = () => {
       const blob = await (await fetch(signatureData)).blob();
       const formData = new FormData();
       formData.append("file", blob, "signature.png");
+      if(isPotentialUser){try {
+        const response = await fetch(`https://boss-lifting-club-api-1.onrender.com/api/potential-users/${userId}/waiver`, {
+          method: 'PATCH',
+          body: formData,
+        });
     
+        if (response.ok) {
+          setSubmitted(true);
+          console.log('Signature successfully submitted');
+        } else {
+          console.error('Failed to submit signature');
+        }
+      } catch (error) {
+        console.error('Error submitting signature:', error);
+      }
+      }else{
       try {
         const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/waiver`, {
           method: 'POST',
@@ -132,6 +147,7 @@ const SignWaiver = () => {
       }
 
       window.location.href = 'cltliftingclub://?userId=' +userId;
+    }
     };
     
     if (submitted) {

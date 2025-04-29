@@ -1,8 +1,10 @@
+import React,{useState} from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Dumbbell, User, Phone, Calendar as CalendarIcon, Lock } from 'lucide-react';
-import { Form, Input, message } from 'antd';
+import { Calendar, Clock, Dumbbell, User, Calendar as CalendarIcon, MailIcon } from 'lucide-react';
+import { Form, Input, message, Spin } from 'antd';
 import DumbellsSide from '../assets/DumbellsSide.jpg';
+import { Link } from 'react-router-dom';
 
 const Section = styled.section`
   padding: 8rem 2rem;
@@ -217,16 +219,72 @@ const StyledButton = styled(motion.button)<{ disabled?: boolean }>`
 
 export const FreePass = () => {
   const [form] = Form.useForm();
-
-  const handleSubmit = async (values: any) => {
+  const [loading, setLoading] = useState(false); // Add loading state
+  const handleSubmit = async (values) => {
+    setLoading(true); // Start loading
     try {
-      message.success('Free pass claimed! Check your phone for confirmation.');
+      // Step 1: Create PotentialUser
+      const createUserResponse = await fetch('https://boss-lifting-club-api.onrender.com/api/potential-users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (!createUserResponse.ok) {
+        const errorData = await createUserResponse.json();
+        throw new Error(errorData.error || 'Failed to claim free pass');
+      }
+  
+      const data = await createUserResponse.json();
+      const potentialUserId = data.id; // Extract user ID
+      const email = values.email; // Extract email from form values
+      console.log(potentialUserId)
+      console.log(data)
+      // Step 2: Send email with waiver URL
+      const waiverUrl = `/signWaiver?userId=${potentialUserId}&isPotentialUser=true`;
+      const emailResponse = await fetch('https://boss-lifting-club-api.onrender.com/api/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: email,
+          subject: "Welcome to CLT Lifting Club!",
+          text: `Thank you for signing up! Please sign the waiver to claim your free pass: https://www.cltliftingclub.com${waiverUrl}`,
+        }),
+      });
+  
+      if (!emailResponse.ok) {
+        // If the response is not OK, attempt to parse the error as JSON if possible
+        const contentType = emailResponse.headers.get('content-type');
+        let emailError;
+        if (contentType && contentType.includes('application/json')) {
+          emailError = await emailResponse.json();
+          throw new Error(emailError.error || 'Failed to send email');
+        } else {
+          const errorText = await emailResponse.text();
+          throw new Error(errorText || 'Failed to send email');
+        }
+      }
+  
+      // Parse the response as text since the backend returns plain text
+      const emailResult = await emailResponse.text();
+      console.log('Email sent:', emailResult);
+      message.success('Email sent successfully!');
+      // Step 4: Reset form
       form.resetFields();
+  
     } catch (error) {
-      message.error('Something went wrong. Please try again.');
+      console.error('Error:', error.message);
+      message.error(error.message || 'Something went wrong. Please try again.');
     }
-  };
+   finally {
 
+    setLoading(false); // Stop loading
+  }
+  };
   return (
     <Section>
       <Container>
@@ -307,32 +365,23 @@ export const FreePass = () => {
             </div>
 
             <Form.Item
-              label="Phone Number"
-              name="phone"
-              rules={[{ required: true, message: 'Please enter your phone number' }]}
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: 'Please enter your email' }]}
             >
               <InputWrapper>
-                <Phone className="input-prefix" size={18} />
-                <Input placeholder="(555) 555-5555" />
+                <MailIcon className="input-prefix" size={18} />
+                <Input placeholder="john.doe@example.com" />
               </InputWrapper>
             </Form.Item>
 
-            <Form.Item
-              label="Preferred Date"
-              name="date"
-              rules={[{ required: true, message: 'Please select your preferred date' }]}
-            >
-              <InputWrapper>
-                <CalendarIcon className="input-prefix" size={18} />
-                <Input type="date" />
-              </InputWrapper>
-            </Form.Item>
 
             <Form.Item>
-              <StyledButton disabled>
-                <Lock size={18} />
-                Coming Soon
+
+            <StyledButton type="submit" disabled={loading} whileHover={{ scale: loading ? 1 : 1.05 }}>
+                {loading ? <Spin size="small" /> : 'Claim Free Day Pass'}
               </StyledButton>
+
             </Form.Item>
           </StyledForm>
         </FormWrapper>
