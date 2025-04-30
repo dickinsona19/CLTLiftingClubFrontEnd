@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Input, Space, Tag, Tooltip } from 'antd';
+import { Table, Input, Space, Tag, Tooltip, Button } from 'antd';
 import styled from 'styled-components';
 import { Search, CheckCircle, XCircle, Copy } from 'lucide-react';
 import { useAdminStore } from '../../contexts/AdminContext';
@@ -79,6 +79,30 @@ const PotentialUsersList = (props) => {
   const [searchText, setSearchText] = useState('');
   const setSelectedUser = useAdminStore((state) => state.setSelectedUser);
 
+
+  const usedFreePass = async (userId: string) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/potential-users/${userId}/free-pass`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user status');
+      }
+
+      const data = await response.json();
+      console.log('User status updated:', data);
+      message.success('User status updated successfully');
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      message.error('Failed to update user status');
+    }
+    
+  };
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -94,7 +118,7 @@ const PotentialUsersList = (props) => {
     };
 
     fetchUsers();
-  }, []);
+  }, [loading]);
 
   const handleCopyReferralCode = (e: React.MouseEvent, code: string) => {
     e.stopPropagation(); // Prevent the row click event
@@ -153,22 +177,22 @@ const PotentialUsersList = (props) => {
       render: (text: any, record: any) => `${record.firstName} ${record.lastName}`,
     },
     {
-      title: 'Status',
-      key: 'status',
-      render: (text: any, record: any) => getEligibilityStatus(record),
-    },
-    {
-      title: 'Membership',
-      dataIndex: 'membershipName',
+      title: 'Used Free Pass',
+      render: (text: any, record: any) => (
+        <>
+          {record.hasReddemedFreePass ? 'Yes' : 'No'}
+          {!record.hasReddemedFreePass && <Button onClick={()=>{usedFreePass(record.id)}} size="small" style={{ marginLeft: '8px' }}>Used Free Pass</Button>}
+        </>
+      ),
       key: 'membershipName',
     },
     {
-      title: 'Referral Code',
+      title: 'Signed Waiver',
       key: 'referralCode',
       render: (text: any, record: any) => (
         <ReferralCode onClick={(e) => handleCopyReferralCode(e, record.referralCode)}>
-          <span>{record.referralCode}</span>
-          <Copy size={16} />
+          <span>{record.waiverSignature ? "True": "False"}</span>
+
         </ReferralCode>
       ),
     },
