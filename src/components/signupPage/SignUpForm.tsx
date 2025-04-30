@@ -383,7 +383,7 @@ export const SignUpForm: React.FC = () => {
         <PriceAmount>
           <span className="currency">$</span>
           <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
-          <span className="period">/year</span>
+          <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
         </PriceAmount>
         
         <PriceDetail>
@@ -397,6 +397,12 @@ export const SignUpForm: React.FC = () => {
           <span className="label">Activation Fee</span>
           <span className="value"> $50</span>
         </div>
+        {contract === "Founding" && (
+          <div>
+            <span className="label">Tax (5%)</span>
+            <span className="value"> $4.99</span>
+          </div>
+        )}
         </PriceDetail>
         
         <BenefitsList>
