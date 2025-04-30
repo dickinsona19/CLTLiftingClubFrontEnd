@@ -7,7 +7,7 @@ import UsersList from './UsersList';
 import UserDetails from './UserDetails';
 import ProductsManager from './ProductsManager';
 import { CheckCircle, XCircle, LogOut } from 'lucide-react';
-
+import PotentialUsersList from './PotentialUsersList';
 const DashboardContainer = styled.div`
   min-height: 100vh;
   background: #1a1a1a;
@@ -278,6 +278,11 @@ const AdminDashboard = () => {
       label: 'Products',
       children: <ProductsManager />,
     },
+    {
+      key: '4',
+      label: 'Potential Users',
+      children: <PotentialUsersList setKeyValue={setKeyValue} />
+    }
   ];
 
   if (!user) {
@@ -310,7 +315,7 @@ const AdminDashboard = () => {
       {selectedUser && (
         <SelectedUserBar>
           <UserAvatar 
-            src={selectedUser.photoUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=100'} 
+            src={selectedUser.profilePictureUrl|| 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=100'} 
             alt={`${selectedUser.firstName} ${selectedUser.lastName}`}
             onClick={() => setIsImagePreviewVisible(true)}
           />
@@ -349,7 +354,7 @@ const AdminDashboard = () => {
         centered
       >
         <PreviewImage
-          src={selectedUser?.photoUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=800'}
+          src={selectedUser?.profilePictureUrl || 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=800'}
           alt={`${selectedUser?.firstName} ${selectedUser?.lastName}`}
         />
       </StyledModal>
