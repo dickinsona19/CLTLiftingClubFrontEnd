@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Modal, Input } from 'antd';
+import { Modal, Input, Spin } from 'antd';
 import { Phone, Send, KeyRound } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -149,6 +149,13 @@ const PhonenumberModal: React.FC<PhonenumberModalProps> = ({
   setPhoneNumber
 }) => {
   const [inputPhoneNumber, setInputPhoneNumber] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const handleVerifyResponse = async () => {
+    setLoading(true);
+    await verifyResponse();
+    setLoading(false);
+  };
 
   return (
     <StyledModal
@@ -197,13 +204,15 @@ const PhonenumberModal: React.FC<PhonenumberModalProps> = ({
                 />
               </InputWrapper>
             </InputContainer>
-            <ActionButton
-              onClick={verifyResponse}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Verify Code
-            </ActionButton>
+
+              <ActionButton
+                onClick={handleVerifyResponse}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={loading}
+              >
+                {loading ? <Spin size="small" /> : 'Verify Code'}
+              </ActionButton>
           </>
         )}
       </Container>
