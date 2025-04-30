@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Waves, Snowflake, Wind, Leaf, Timer, Heart } from 'lucide-react';
+import { Waves, Snowflake, Wind, Leaf, Timer, Heart,Sun } from 'lucide-react';
 import ColdPlunge from '../assets/ColdPlunge.jpg'
 const Section = styled.section`
   padding: 8rem 2rem;
@@ -223,23 +223,22 @@ export const Recovery = () => {
             <IconWrapper>
               <Waves size={48} />
             </IconWrapper>
-            <FeatureTitle>Infrared and Traditional Sauna Suite</FeatureTitle>
+            <FeatureTitle>Sauna Experience</FeatureTitle>
             <Description>
-              Experience deep tissue healing and relaxation in our premium infrared saunas. 
-              Utilizing advanced technology for optimal therapeutic benefits.
+              Relax and unwind in our traditional sauna, perfect for soothing muscles and calming the mind.
             </Description>
             <BenefitsList>
               <BenefitItem>
-                <Timer size={20} />
-                30-60 minute therapeutic sessions
+                <Sun size={20} />
+                Warm and inviting sessions for relaxation
               </BenefitItem>
               <BenefitItem>
                 <Heart size={20} />
-                Improved circulation and recovery
+                Improved circulation and detoxification
               </BenefitItem>
               <BenefitItem>
                 <Wind size={20} />
-                Enhanced detoxification
+                Refreshed and rejuvenated skin
               </BenefitItem>
             </BenefitsList>
           </Feature>

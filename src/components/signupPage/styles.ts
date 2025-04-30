@@ -29,6 +29,7 @@ export const PriceCard = styled(motion.div)`
   
   @media (max-width: 768px) {
     padding: 2rem 1.5rem;
+  margin-top: 2em;
   }
 `;
 
