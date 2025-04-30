@@ -226,7 +226,6 @@ const PotentialUsersList = (props) => {
           rowKey="id"
           onRow={(record) => ({
             onClick: () => {
-              setSelectedUser(record);
               console.log(record)
             },
           })}
