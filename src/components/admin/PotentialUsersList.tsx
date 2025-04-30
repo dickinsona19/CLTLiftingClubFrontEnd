@@ -106,13 +106,13 @@ const PotentialUsersList = (props) => {
   const getEligibilityStatus = (user: any) => {
     const issues = [];
     
-    if (!user.signatureData) {
+    if (!user.waiverSignature) {
       issues.push('Waiver not signed');
     }
     if (!user.over18) {
       issues.push('Under 18');
     }
-    if (!user.isInGoodStanding) {
+    if (user.hasReddemedFreePass) {
       issues.push('Not eligible');
     }
 

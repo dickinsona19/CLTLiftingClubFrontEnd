@@ -116,7 +116,7 @@ const SignWaiver = () => {
       formData.append("file", blob, "signature.png");
       if(isPotentialUser){try {
         const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/potential-users/${userId}/waiver`, {
-          method: 'PATCH',
+          method: 'POST',
           body: formData,
         });
     
