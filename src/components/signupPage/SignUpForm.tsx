@@ -5,7 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import PhonenumberModal from './PhoneNumberModal';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   BannerContainer, 
   PriceCard, 
@@ -216,6 +216,8 @@ const StyledForm = styled(Form)`
 const stripePromise = loadStripe("pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X1XqAuwzNiMdc5KQI8yYBRCI2qzGoT9WW9eptoZQhNOMR2mxSaxo00AtKHFX5N");
 
 export const SignUpForm: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const contract = searchParams.get('contract');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [form] = Form.useForm();
@@ -331,7 +333,8 @@ export const SignUpForm: React.FC = () => {
           phoneNumber,
           password,
           membershipName: "Founder",
-          referralId : referedUser?.id
+          referralId: referedUser?.id,
+          lockedInRate: contract === "Annual" ? "948.00" : "99.99"
         }),
       });
       const signupData = await signupResponse.json();
@@ -372,26 +375,34 @@ export const SignUpForm: React.FC = () => {
       >
         <FounderTag>
           <Star size={14} />
-          <span>Founding Member</span>
+          <span>{contract === "Founding" ? "Founding Member" : (contract === "Annual" ? "Annual" : "")}</span>
         </FounderTag>
         
         <PriceHeading>CLT Lifting Club</PriceHeading>
         
         <PriceAmount>
           <span className="currency">$</span>
-          <span className="amount">99</span>
-          <span className="period">/month</span>
+          <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
+          <span className="period">/year</span>
         </PriceAmount>
         
         <PriceDetail>
+        {/* {contract === "Annual" && (
+          <div>
+            <span className="label">Lump Payment</span>
+            <span className="value"> $948</span>
+          </div>
+        )} */}
+        <div>
           <span className="label">Activation Fee</span>
-          <span className="value">$50</span>
+          <span className="value"> $50</span>
+        </div>
         </PriceDetail>
         
         <BenefitsList>
           <BenefitItem>
             <Star size={16} />
-            <span>Hours 5-11</span>
+            <span>Operating Hours: 5AM - 11PM</span>
           </BenefitItem>
           <BenefitItem>
             <Star size={16} />

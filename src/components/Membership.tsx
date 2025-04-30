@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
-// import { Flex, Radio, RadioChangeEvent } from 'antd';
-// import { useState } from 'react';
+import { Flex, Radio, RadioChangeEvent } from 'antd';
+import { useState } from 'react';
 import BigWeight from '../assets/BigWeight.jpg'
 const Section = styled.section`
   min-height: 100vh;
@@ -49,7 +49,7 @@ const Grid = styled.div`
   gap: 2rem;
   
   @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 `;
 
@@ -195,10 +195,10 @@ const MaintenanceFee = styled.div`
 
 
 export const Membership = () => {
-//  const [contractMonthTime, setContractMonthTime] = useState("12 Month")
-// const onChange = (e: RadioChangeEvent) => {
-//   setContractMonthTime(e.target.value);
-// };
+ const [contractMonthTime, setContractMonthTime] = useState("12 Month")
+const onChange = (e: RadioChangeEvent) => {
+  setContractMonthTime(e.target.value);
+};
   return (
     <Section>
       <Container>
@@ -218,7 +218,7 @@ export const Membership = () => {
           Select the membership that matches your commitment to excellence. 
           Join our community of dedicated athletes and transform your potential into power.
         </Subtitle>
-        {/* <Grid> */}
+        <Grid>
           {/* <PlanCard
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -332,16 +332,17 @@ export const Membership = () => {
                 Full Recovery Zone
               </Feature>
             </Features>
-            <Link to="/signup" style={{ textDecoration: 'none' }}>
+            <Link to="/signup?contract=Founding" style={{ textDecoration: 'none' }}>
               <Button>
                 Sign up
               </Button>
             </Link>
           </PlanCard>
+          
         
 
 
-          {/* <PlanCard
+          <PlanCard
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -349,16 +350,12 @@ export const Membership = () => {
           >
             <PlanName>Annual</PlanName>
             <Price>$79 <span>/ month</span></Price>
-            <ActivationFee>$49 Activation Fee</ActivationFee>
-            <PaymentNote>Paid in full - $948 annually</PaymentNote>
+            <ActivationFee>$50 Activation Fee</ActivationFee>
+            <ActivationFee>Paid in full - 948</ActivationFee>
             <Features>
               <Feature>
                 <Calendar size={20} />
                 12-Month Commitment
-              </Feature>
-              <Feature>
-                <Clock size={20} />
-                24/7 Access
               </Feature>
               <Feature>
                 <Dumbbell size={20} />
@@ -370,15 +367,16 @@ export const Membership = () => {
               </Feature>
 
             </Features>
-            <Button disabled>
-              <Lock size={18} />
-              Coming Soon
-            </Button>
-          </PlanCard> */}
+            <Link to="/signup?contract=Annual" style={{ textDecoration: 'none' }}>
+              <Button>
+                Sign up
+              </Button>
+            </Link>
+          </PlanCard>
 
           
           
-        {/* </Grid> */}
+        </Grid>
 
         <MaintenanceFee>
           <p>All memberships include a bi-annual maintenance fee of $59.99 charged in January and June</p>

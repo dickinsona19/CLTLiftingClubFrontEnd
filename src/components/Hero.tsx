@@ -141,7 +141,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            <PrimaryButton to="/signup" >
+            <PrimaryButton to="/signup?contract=Founding" >
               Get Started
             </PrimaryButton>
             <SecondaryButton onClick={onJoinClick}>

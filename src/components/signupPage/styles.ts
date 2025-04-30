@@ -103,18 +103,25 @@ export const PriceAmount = styled.div`
 
 export const PriceDetail = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column; /* Stack child divs vertically */
+  gap: 1rem; /* Space between divs */
   background: rgba(255, 255, 255, 0.05);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   margin-bottom: 2rem;
-  
+
+  /* Style each child div to align label and value horizontally */
+  > div {
+    display: flex;
+    justify-content: space-between; /* Horizontal alignment of label and value */
+    align-items: center; /* Vertically center text within each div */
+  }
+
   .label {
     color: rgba(255, 255, 255, 0.7);
     font-size: 1rem;
   }
-  
+
   .value {
     color: white;
     font-size: 1.25rem;
