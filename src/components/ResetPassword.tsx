@@ -109,7 +109,7 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const response = await fetch('https://boss-lifting-club-api.onrender.com/users/password/'+id, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
