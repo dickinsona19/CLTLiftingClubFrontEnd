@@ -16,20 +16,16 @@ import {
   BenefitsList,
   BenefitItem
 } from './styles';
+
 const FormContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
-    url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
-    no-repeat center/cover fixed;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
+    url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+    no-repeat center/cover fixed;
 `;
 
 const ContentWrapper = styled.div`
@@ -69,76 +65,6 @@ const FormWrapper = styled.div`
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
 `;
 
-const PriceBanner = styled(motion.div)`
-  text-align: left;
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 1rem;
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-      @media (max-width: 550px) {
-      font-size: 3rem;
-  }
-}    
-  p {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.25rem;
-    margin-bottom: 0;
-    line-height: 1.6;
-  }
-`;
-
-const SpecialOffer = styled(motion.div)`
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  svg {
-    color: #10B981;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-  }
-  p {
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-`;
-
-const FreeMonthBanner = styled(motion.div)`
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  h3 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  p {
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-`;
-
 const FormHeader = styled.div`
   text-align: center;
   margin-bottom: 2rem;
@@ -171,24 +97,41 @@ const StyledForm = styled(Form)`
   .ant-form-item-label > label {
     color: white;
   }
+
   .ant-input,
   .ant-input-password {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    color: white !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:hover,
     &:focus,
-    &:hover {
-      color: black;
-      border-color: rgba(255, 255, 255, 0.5);
+    &:focus-within {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(255, 255, 255, 0.3);
       box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
     }
   }
-  .ant-input-password-icon {
-    color: rgba(255, 255, 255, 0.5);
+
+  .ant-input-password {
+    input {
+      background: transparent !important;
+      color: white !important;
+    }
+
+    .ant-input-password-icon {
+      color: rgba(255, 255, 255, 0.5);
+    }
   }
+
   .ant-checkbox-wrapper {
     color: rgba(255, 255, 255, 0.8);
   }
+
   .ant-btn {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -198,12 +141,14 @@ const StyledForm = styled(Form)`
     text-transform: uppercase;
     letter-spacing: 2px;
     transition: all 0.3s ease;
+
     &:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.5);
       box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
     }
   }
+
   a {
     color: white;
     text-decoration: underline;
@@ -259,12 +204,10 @@ export const SignUpForm: React.FC = () => {
   useEffect(() => {
     const handleReferrerUser = () => {
       if (referralCode.length === 10) {
-        // Make API request to get user
         fetch(`${baseAPI}/users/referralCode/${referralCode}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            // Add any additional headers if needed (e.g., authorization)
           },
         })
           .then((response) => {
@@ -287,7 +230,7 @@ export const SignUpForm: React.FC = () => {
       }
     }
 
-      handleReferrerUser()
+    handleReferrerUser()
   }, [referralCode]);
 
   const showModal = () => {
@@ -350,7 +293,7 @@ export const SignUpForm: React.FC = () => {
       if (error) {
         message.error(`Card setup failed: ${error.message}`);
       }
-    } catch  {
+    } catch {
       message.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -365,68 +308,59 @@ export const SignUpForm: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
         >
-
-          <BannerContainer >
-      <PriceCard 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        whileHover={{ scale: 1.02, boxShadow: '0 25px 50px rgba(0, 0, 0, 0.2)' }}
-      >
-        <FounderTag>
-          <Star size={14} />
-          <span>{contract === "Founding" ? "Founding Member" : (contract === "Annual" ? "Annual" : "")}</span>
-        </FounderTag>
-        
-        <PriceHeading>CLT Lifting Club</PriceHeading>
-        
-        <PriceAmount>
-          <span className="currency">$</span>
-          <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
-          <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
-        </PriceAmount>
-        
-        <PriceDetail>
-        {/* {contract === "Annual" && (
-          <div>
-            <span className="label">Lump Payment</span>
-            <span className="value"> $948</span>
-          </div>
-        )} */}
-        <div>
-          <span className="label">Activation Fee</span>
-          <span className="value"> $50</span>
-        </div>
-        {contract === "Founding" && (
-          <div>
-            <span className="label">Tax (5%)</span>
-            <span className="value"> $4.99</span>
-          </div>
-        )}
-        </PriceDetail>
-        
-        <BenefitsList>
-          <BenefitItem>
-            <Star size={16} />
-            <span>Operating Hours: 5AM - 11PM</span>
-          </BenefitItem>
-          <BenefitItem>
-            <Star size={16} />
-            <span>Premium Equipment</span>
-          </BenefitItem>
-          <BenefitItem>
-            <Star size={16} />
-            <span>Founder Status Benefits</span>
-          </BenefitItem>
-          <BenefitItem>
-            <Star size={16} />
-            <span>Community Events</span>
-          </BenefitItem>
-        </BenefitsList>
-      </PriceCard>
-    </BannerContainer>
-
-         
+          <BannerContainer>
+            <PriceCard 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              whileHover={{ scale: 1.02, boxShadow: '0 25px 50px rgba(0, 0, 0, 0.2)' }}
+            >
+              <FounderTag>
+                <Star size={14} />
+                <span>{contract === "Founding" ? "Founding Member" : (contract === "Annual" ? "Annual" : "")}</span>
+              </FounderTag>
+              
+              <PriceHeading>CLT Lifting Club</PriceHeading>
+              
+              <PriceAmount>
+                <span className="currency">$</span>
+                <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
+                <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
+              </PriceAmount>
+              
+              <PriceDetail>
+                <div>
+                  <span className="label">Activation Fee</span>
+                  <span className="value"> $50</span>
+                </div>
+                {contract === "Founding" && (
+                  <div>
+                    <span className="label">Tax (5%)</span>
+                    <span className="value"> $4.99</span>
+                  </div>
+                )}
+              </PriceDetail>
+              
+              <BenefitsList>
+                <BenefitItem>
+                  <Star size={16} />
+                  <span>Operating Hours: 5AM - 11PM</span>
+                </BenefitItem>
+                <BenefitItem>
+                  <Star size={16} />
+                  <span>Premium Equipment</span>
+                </BenefitItem>
+                <BenefitItem>
+                  <Star size={16} />
+                  <span>Founder Status Benefits</span>
+                </BenefitItem>
+                <BenefitItem>
+                  <Star size={16} />
+                  <span>Community Events</span>
+                </BenefitItem>
+              </BenefitsList>
+            </PriceCard>
+          </BannerContainer>
         </PromoBanners>
 
         <FormWrapper>
@@ -470,7 +404,7 @@ export const SignUpForm: React.FC = () => {
             </Form.Item>
             {referedUser &&
             <MaintenanceFeeNote>
-           {referedUser === "Not Found" ? (
+              {referedUser === "Not Found" ? (
                 <>Cannot Find reference</>
               ) : (
                 <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>

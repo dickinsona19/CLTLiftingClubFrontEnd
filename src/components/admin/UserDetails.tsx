@@ -1,7 +1,7 @@
 import { Card, Descriptions, Space, Tag, Button, Input, message } from 'antd';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
-import { Edit2, Save, X, Copy } from 'lucide-react';
+import { Edit2, Save, X, Copy, Send  } from 'lucide-react';
 import { useState } from 'react';
 
 const DetailsContainer = styled.div`
@@ -87,7 +87,14 @@ const ReferralCode = styled.div`
   gap: 0.5rem;
   cursor: pointer;
 `;
-
+const ActionsPanel = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+`;
 const UserDetails = (props) => {
   const { selectedUser, setSelectedUser } = useAdminStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -111,6 +118,23 @@ const UserDetails = (props) => {
     }
     setError('');
     return true;
+  };
+
+  const handleSendPasswordReset = async () => {
+    try {
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/${selectedUser.id}/sendPasswordEmail?cusId=${selectedUser.userStripeMemberId}`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        message.success('Password reset email sent successfully');
+      } else {
+        throw new Error('Failed to send password reset');
+      }
+    } catch (error) {
+      console.error('Error sending password reset:', error);
+      message.error('Failed to send password reset email');
+    }
   };
   async function updateUserOver18(userId) {
     try {
@@ -217,6 +241,15 @@ const UserDetails = (props) => {
               {new Date(selectedUser.createdAt).toLocaleDateString()}
             </Descriptions.Item>
           </Descriptions>
+          <ActionsPanel>
+            <Button 
+              type="primary" 
+              icon={<Send size={16} />}
+              onClick={handleSendPasswordReset}
+            >
+              Send Password Reset
+            </Button>
+          </ActionsPanel>
         </Card>
 
         <Card title="Membership Details">

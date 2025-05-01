@@ -154,10 +154,9 @@ const StyledForm = styled(Form)`
 
   .ant-input {
     height: 50px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
+    color: white !important;
     transition: all 0.3s ease;
     font-size: 1rem;
     padding-left: 3rem;
@@ -168,9 +167,9 @@ const StyledForm = styled(Form)`
 
     &:hover,
     &:focus {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05) !important;
       border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -219,11 +218,10 @@ const StyledButton = styled(motion.button)<{ disabled?: boolean }>`
 
 export const FreePass = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (values) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
-      // Step 1: Create PotentialUser
       const createUserResponse = await fetch('https://boss-lifting-club-api.onrender.com/api/potential-users', {
         method: 'POST',
         headers: {
@@ -238,11 +236,11 @@ export const FreePass = () => {
       }
   
       const data = await createUserResponse.json();
-      const potentialUserId = data.id; // Extract user ID
-      const email = values.email; // Extract email from form values
+      const potentialUserId = data.id;
+      const email = values.email;
       console.log(potentialUserId)
       console.log(data)
-      // Step 2: Send email with waiver URL
+
       const waiverUrl = `/signWaiver?userId=${potentialUserId}&isPotentialUser=true`;
       const emailResponse = await fetch('https://boss-lifting-club-api.onrender.com/api/email/send', {
         method: 'POST',
@@ -257,7 +255,6 @@ export const FreePass = () => {
       });
   
       if (!emailResponse.ok) {
-        // If the response is not OK, attempt to parse the error as JSON if possible
         const contentType = emailResponse.headers.get('content-type');
         let emailError;
         if (contentType && contentType.includes('application/json')) {
@@ -269,22 +266,19 @@ export const FreePass = () => {
         }
       }
   
-      // Parse the response as text since the backend returns plain text
       const emailResult = await emailResponse.text();
       console.log('Email sent:', emailResult);
       message.success('Email sent successfully!');
-      // Step 4: Reset form
       form.resetFields();
   
     } catch (error) {
       console.error('Error:', error.message);
       message.error(error.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
-   finally {
-
-    setLoading(false); // Stop loading
-  }
   };
+
   return (
     <Section>
       <Container>
@@ -375,13 +369,10 @@ export const FreePass = () => {
               </InputWrapper>
             </Form.Item>
 
-
             <Form.Item>
-
-            <StyledButton type="submit" disabled={loading} whileHover={{ scale: loading ? 1 : 1.05 }}>
+              <StyledButton type="submit" disabled={loading} whileHover={{ scale: loading ? 1 : 1.05 }}>
                 {loading ? <Spin size="small" /> : 'Claim Free Day Pass'}
               </StyledButton>
-
             </Form.Item>
           </StyledForm>
         </FormWrapper>

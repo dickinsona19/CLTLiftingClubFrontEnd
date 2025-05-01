@@ -39,13 +39,13 @@ const StyledForm = styled(Form)`
   }
 
   .ant-input-affix-wrapper {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
 
     input {
-      background: transparent;
-      color: white;
+      background: transparent !important;
+      color: white !important;
 
       &::placeholder {
         color: rgba(255, 255, 255, 0.5);
@@ -54,6 +54,37 @@ const StyledForm = styled(Form)`
 
     .anticon {
       color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+
+      input {
+        background: transparent !important;
+      }
+    }
+  }
+
+  .ant-input-password {
+    background: rgba(255, 255, 255, 0.05) !important;
+
+    input {
+      background: transparent !important;
+      color: white !important;
+    }
+
+    .ant-input-password-icon {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+      background: rgba(255, 255, 255, 0.05) !important;
     }
   }
 
@@ -79,8 +110,6 @@ const AdminLogin = () => {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      // In a real application, you would make an API call here
-      // This is just a mock authentication
       if (values.email === 'cltlifting' && values.password === 'ADMIN') {
         setUser({
           id: '1',
@@ -113,7 +142,6 @@ const AdminLogin = () => {
             name="email"
             rules={[
               { required: true, message: 'Please input your email!' },
-             
             ]}
           >
             <Input prefix={<Mail size={16} />} placeholder="admin@example.com" />

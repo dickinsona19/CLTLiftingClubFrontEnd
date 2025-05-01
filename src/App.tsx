@@ -16,6 +16,7 @@ import { LocationMap } from './components/LocationMap';
 import SignWaiver from './components/SignWaiver';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
+import ResetPassword from './components/ResetPassword';
 import { AdminProvider } from './contexts/AdminContext';
 import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
@@ -120,6 +121,7 @@ function App() {
           <Route path="/signWaiver" element={<SignWaiver/>} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </AdminProvider>
     </Router>

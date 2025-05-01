@@ -61,10 +61,10 @@ const Label = styled.p`
 
 const StyledInput = styled(Input)`
   height: 50px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 15px;
-  color: white;
+  color: white !important;
   font-size: 1rem;
   padding-left: 3rem;
 
@@ -74,9 +74,9 @@ const StyledInput = styled(Input)`
 
   &:hover,
   &:focus {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05) !important;
     border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
   }
 `;
 

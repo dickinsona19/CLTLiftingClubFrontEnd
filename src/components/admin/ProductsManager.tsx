@@ -4,6 +4,7 @@ import { PlusCircle, Trash2, Edit, ShoppingBag } from 'lucide-react';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
 import PurchaseModal from './PurchaseModal';
+
 const Container = styled.div`
   .ant-table {
     background: rgba(255, 255, 255, 0.05);
@@ -76,14 +77,23 @@ const StyledModal = styled(Modal)`
     color: white;
   }
 
-  .ant-input, .ant-select-selector {
-    background: rgba(255, 255, 255, 0.1) !important;
+  .ant-input, 
+  .ant-input-number,
+  .ant-select-selector {
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: black !important;
+    color: white !important;
 
-    &:hover, &:focus {
+    &:hover, 
+    &:focus {
       border-color: rgba(255, 255, 255, 0.3) !important;
+      background: rgba(255, 255, 255, 0.05) !important;
     }
+  }
+
+  .ant-input-number-input {
+    background: transparent !important;
+    color: white !important;
   }
 
   .ant-select-arrow {
