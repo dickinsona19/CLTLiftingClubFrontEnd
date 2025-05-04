@@ -192,7 +192,7 @@ const AdminDashboard = () => {
   const [keyValue, setKeyValue] = useState('1');
   const [totalUsers, setTotalUsers] = useState(0);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState(false);
-
+  const [totalActiveUsers, setTotalActiveUsers] = useState(0);
   
   useEffect(() => {
     let tempBuffer = '';
@@ -237,13 +237,14 @@ const AdminDashboard = () => {
       navigate('/admin');
     }
   }, [user, navigate]);
-
   useEffect(() => {
     const fetchTotalUsers = async () => {
       try {
         const response = await fetch('https://boss-lifting-club-api.onrender.com/users');
         const data = await response.json();
         setTotalUsers(data.length);
+        const activeUsersCount = data.filter(user => user.isInGoodStanding).length;
+        setTotalActiveUsers(activeUsersCount);
       } catch (error) {
         console.error('Error fetching total users:', error);
       }
@@ -297,6 +298,10 @@ const AdminDashboard = () => {
           <UserCount>
             <label>Total Users</label>
             <span>{totalUsers}</span>
+          </UserCount>
+          <UserCount>
+            <label>Total Active Users</label>
+            <span>{totalActiveUsers}</span>
           </UserCount>
         <Button variant="contained" color="primary" onClick={()=>console.log("HEllo")}>
           Open CLT Lifting Club
