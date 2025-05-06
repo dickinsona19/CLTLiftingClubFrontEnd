@@ -1,8 +1,9 @@
 import { Card, Descriptions, Space, Tag, Button, Input, message } from 'antd';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
-import { Edit2, Save, X, Copy, Send  } from 'lucide-react';
-import { useState } from 'react';
+import { Edit2, Save, X, Copy, Send, Users } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import JointAccountModal from './JointAccountModal';
 
 const DetailsContainer = styled.div`
   .ant-card {
@@ -24,8 +25,6 @@ const DetailsContainer = styled.div`
     color: white;
   }
 `;
-
-
 
 const EditableField = styled.div`
   display: flex;
@@ -87,6 +86,7 @@ const ReferralCode = styled.div`
   gap: 0.5rem;
   cursor: pointer;
 `;
+
 const ActionsPanel = styled.div`
   display: flex;
   gap: 1rem;
@@ -95,11 +95,83 @@ const ActionsPanel = styled.div`
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
 `;
+
+const JointAccountsSection = styled.div`
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const JointAccountCard = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const Avatar = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+`;
+
+const UserInfo = styled.div`
+  flex: 1;
+
+  h4 {
+    color: white;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-size: 0.875rem;
+  }
+`;
+
 const UserDetails = (props) => {
   const { selectedUser, setSelectedUser } = useAdminStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editedCode, setEditedCode] = useState('');
   const [error, setError] = useState('');
+  const [isJointAccountModalVisible, setIsJointAccountModalVisible] = useState(false);
+  const [jointAccounts, setJointAccounts] = useState([]);
+
+  useEffect(() => {
+    if (selectedUser?.id) {
+      fetchJointAccounts();
+    }
+  }, [selectedUser]);
+
+  const fetchJointAccounts = async () => {
+    try {
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${selectedUser.id}/joint-accounts`);
+      if (response.ok) {
+        const data = await response.json();
+        setJointAccounts(data);
+      }
+    } catch (error) {
+      console.error('Error fetching joint accounts:', error);
+    }
+  };
 
   if (!selectedUser) {
     return null;
@@ -136,9 +208,9 @@ const UserDetails = (props) => {
       message.error('Failed to send password reset email');
     }
   };
+
   async function updateUserOver18(userId) {
     try {
-        // Validate userId
         if (!Number.isInteger(userId) || userId <= 0) {
             throw new Error('Invalid userId: must be a positive integer');
         }
@@ -147,8 +219,6 @@ const UserDetails = (props) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                // Add Authorization header if your API requires authentication
-                // 'Authorization': `Bearer ${yourToken}`
             }
         });
 
@@ -162,12 +232,13 @@ const UserDetails = (props) => {
         const updatedUser = await response.json();
         setSelectedUser(updatedUser)
         console.log('User updated successfully:', updatedUser);
-        return updatedUser; // Return the updated user object
+        return updatedUser;
     } catch (error) {
         console.error('Error updating user:', error.message);
-        throw error; // Re-throw to allow the caller to handle the error
+        throw error;
     }
-}
+  }
+
   const handleSave = async () => {
     if (!validateReferralCode(editedCode)) {
       return;
@@ -210,15 +281,13 @@ const UserDetails = (props) => {
   return (
     <DetailsContainer>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-
-
         <Card title={
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>User Information</span>
             <div>
               <span>Stripe Account: </span>
               <a href={`https://dashboard.stripe.com/customers/${selectedUser.userStripeMemberId}`} target="_blank" rel="noopener noreferrer">Click Here</a>
-              </div>
+            </div>
             <div>
               <span>Over 18: </span>
               {selectedUser.over18? <>True</>:<Button type="primary" onClick={()=>updateUserOver18(selectedUser.id)}>Confirm 18 +</Button>}
@@ -330,7 +399,49 @@ const UserDetails = (props) => {
             </Descriptions.Item>
           </Descriptions>
         </Card>
+
+        <Card title="Joint Accounts">
+          <Button 
+            type="primary"
+            icon={<Users size={16} />}
+            onClick={() => setIsJointAccountModalVisible(true)}
+            style={{ marginBottom: '1rem' }}
+          >
+            Add Joint Account
+          </Button>
+
+          <JointAccountsSection>
+            {jointAccounts.length > 0 ? (
+              jointAccounts.map((account: any) => (
+                <JointAccountCard key={account.id}>
+                  <Avatar>
+                    {account.firstName[0]}{account.lastName[0]}
+                  </Avatar>
+                  <UserInfo>
+                    <h4>{account.firstName} {account.lastName}</h4>
+                    <p>{account.email}</p>
+                    <p>{account.phoneNumber}</p>
+                  </UserInfo>
+                  <Tag color={account.status === 'active' ? 'green' : 'red'}>
+                    {account.status}
+                  </Tag>
+                </JointAccountCard>
+              ))
+            ) : (
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center' }}>
+                No joint accounts found
+              </p>
+            )}
+          </JointAccountsSection>
+        </Card>
       </Space>
+
+      <JointAccountModal
+        isVisible={isJointAccountModalVisible}
+        onClose={() => setIsJointAccountModalVisible(false)}
+        userId={selectedUser.id}
+        onSuccess={fetchJointAccounts}
+      />
     </DetailsContainer>
   );
 };
