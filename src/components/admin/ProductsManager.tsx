@@ -74,7 +74,7 @@ const StyledModal = styled(Modal)`
   }
 
   .ant-form-item-label > label {
-    color: white;
+
   }
 
   .ant-input, 
@@ -82,7 +82,7 @@ const StyledModal = styled(Modal)`
   .ant-select-selector {
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
+  
 
     &:hover, 
     &:focus {
@@ -93,7 +93,7 @@ const StyledModal = styled(Modal)`
 
   .ant-input-number-input {
     background: transparent !important;
-    color: white !important;
+
   }
 
   .ant-select-arrow {
@@ -116,20 +116,17 @@ const StyledTabs = styled(Tabs)`
 
   .ant-tabs-tab {
     color: rgba(255, 255, 255, 0.7);
-    
-    &:hover {
-      color: white;
-    }
+
   }
 
   .ant-tabs-tab-active {
     .ant-tabs-tab-btn {
-      color: white !important;
+
     }
   }
 
   .ant-tabs-ink-bar {
-    background: white;
+
   }
 `;
 
