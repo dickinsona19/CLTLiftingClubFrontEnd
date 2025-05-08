@@ -344,7 +344,7 @@ export const SignUpForm: React.FC = () => {
               <BenefitsList>
                 <BenefitItem>
                   <Star size={16} />
-                  <span>Operating Hours: 5AM - 11PM</span>
+                  <span>Operating Hours: 5AM - 9PM</span>
                 </BenefitItem>
                 <BenefitItem>
                   <Star size={16} />

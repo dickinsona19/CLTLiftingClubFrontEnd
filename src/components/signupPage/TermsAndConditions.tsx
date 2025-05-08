@@ -196,7 +196,7 @@ const TermsAndConditions = () => {
     <Section>
       <SectionTitle>6. Facility Access & Rules</SectionTitle>
       <List>
-        <li><strong>Access:</strong> Members can enjoy gym facilities from 5 AM to 11 PM with their authorized credentials (e.g., key fob, mobile app code). Access is limited to the member and may not be shared with non-members.</li>
+        <li><strong>Access:</strong> Members can enjoy gym facilities from 5 AM to 9 PM with their authorized credentials (e.g., key fob, mobile app code). Access is limited to the member and may not be shared with non-members.</li>
         <li><strong>Safety Protocols:</strong> All members must follow gym safety protocols and equipment usage guidelines, including but not limited to proper attire, equipment handling, and cleaning procedures. Failure to comply may result in suspension or termination of membership.</li>
         <li><strong>Personal Training:</strong> Personal training services are available at an additional cost and are subject to separate agreements with certified trainers.</li>
         <li><strong>Guest Policy:</strong> Guests are not permitted unless explicitly authorized by CLT Lifting Club in writing. Members are responsible for the conduct of any approved guests.</li>

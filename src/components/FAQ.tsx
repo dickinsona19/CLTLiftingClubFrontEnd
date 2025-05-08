@@ -132,7 +132,7 @@ const faqData = [
   },
   {
     question: "What are your hours?",
-    answer: "M-T: 5 AM - 11PM, F: 5AM - 9PM, Saturday: 7AM - 9PM, Sunday: 9AM - 9PM"
+    answer: "M-T: 5 AM - 9PM, F: 5AM - 8PM, Saturday: 7AM - 5PM, Sunday: 10AM - 5PM"
   },
   {
     question: "Is there a contract?",
