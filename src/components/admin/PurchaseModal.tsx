@@ -139,6 +139,7 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
   const API_URL = 'https://boss-lifting-club-api.onrender.com/products'; // Replace with your actual URL
 
@@ -168,13 +169,22 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
   };
   const handlePurchase = async () => {
     try {
+      setIsPurchasing(true); // start loading
       const values = await form.validateFields();
       const total = selectedProduct.price * quantity;
-      await fetch(`${API_URL}/purchaseProduct?productId=${values.productId}&stripeCustomerId=${selectedUser.userStripeMemberId}&quantity=${values.quantity}`, {
+  
+      const res = await fetch(`${API_URL}/purchaseProduct?productId=${values.productId}&stripeCustomerId=${selectedUser.userStripeMemberId}&quantity=${values.quantity}`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: values.productId,
+          stripeCustomerId: selectedUser.userStripeMemberId,
+          quantity: values.quantity,
+        }),
       });
-      
-
+  
       message.success(`Purchase successful! Total: $${total.toFixed(2)}`);
       form.resetFields();
       setSelectedProduct(null);
@@ -182,6 +192,8 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
       onClose();
     } catch (error) {
       message.error('Failed to process purchase');
+    } finally {
+      setIsPurchasing(false); // stop loading
     }
   };
 
@@ -193,6 +205,7 @@ const PurchaseModal = ({ isVisible, onClose, userId }: PurchaseModalProps) => {
       onCancel={onClose}
       okText="Complete Purchase"
       cancelText="Cancel"
+      confirmLoading={isPurchasing}
     >
       {loading ? (
         <Spin tip="Loading products..." />
