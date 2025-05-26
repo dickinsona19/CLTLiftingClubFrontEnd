@@ -455,7 +455,7 @@ const UserDetails = (props) => {
 <Elements stripe={stripePromise}>      <UpdateCardModal
         isVisible={isUpdateCardModalVisible}
         onClose={() => setIsUpdateCardModalVisible(false)}
-        stripeCustomerId={selectedUser.stripeCustomerId}
+        stripeCustomerId={selectedUser.userStripeMemberId}
       /></Elements>
 
     </DetailsContainer>

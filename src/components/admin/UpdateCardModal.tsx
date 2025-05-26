@@ -116,7 +116,7 @@ interface UpdateCardModalProps {
   stripeCustomerId: string;
 }
 
-const BACKEND_URL = 'https://boss-lifting-club-api.onrender.com/'; // Replace with your Spring backend URL
+const BACKEND_URL = 'https://boss-lifting-club-api.onrender.com'; // Replace with your Spring backend URL
 
 const UpdateCardModal = ({ isVisible, onClose, stripeCustomerId }: UpdateCardModalProps) => {
   const [form] = Form.useForm();
