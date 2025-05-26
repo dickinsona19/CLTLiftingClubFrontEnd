@@ -1,10 +1,12 @@
 import { Card, Descriptions, Space, Tag, Button, Input, message } from 'antd';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
-import { Edit2, Save, X, Copy, Send, Users } from 'lucide-react';
+import { Edit2, Save, X, Copy, Send, Users, CreditCard } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import JointAccountModal from './JointAccountModal';
-
+import UpdateCardModal from './UpdateCardModal';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 const DetailsContainer = styled.div`
   .ant-card {
     background: rgba(255, 255, 255, 0.05);
@@ -146,13 +148,14 @@ const UserInfo = styled.div`
     font-size: 0.875rem;
   }
 `;
-
+const stripePromise = loadStripe('pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X1XqAuwzNiMdc5KQI8yYBRCI2qzGoT9WW9eptoZQhNOMR2mxSaxo00AtKHFX5N');
 const UserDetails = (props) => {
   const { selectedUser, setSelectedUser } = useAdminStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editedCode, setEditedCode] = useState('');
   const [error, setError] = useState('');
   const [isJointAccountModalVisible, setIsJointAccountModalVisible] = useState(false);
+  const [isUpdateCardModalVisible, setIsUpdateCardModalVisible] = useState(false);
   const [jointAccounts, setJointAccounts] = useState([]);
 
   useEffect(() => {
@@ -211,31 +214,31 @@ const UserDetails = (props) => {
 
   async function updateUserOver18(userId) {
     try {
-        if (!Number.isInteger(userId) || userId <= 0) {
-            throw new Error('Invalid userId: must be a positive integer');
+      if (!Number.isInteger(userId) || userId <= 0) {
+        throw new Error('Invalid userId: must be a positive integer');
+      }
+
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/over18`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
         }
+      });
 
-        const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/over18`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('User not found');
-            }
-            throw new Error(`HTTP error: ${response.status}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('User not found');
         }
+        throw new Error(`HTTP error: ${response.status}`);
+      }
 
-        const updatedUser = await response.json();
-        setSelectedUser(updatedUser)
-        console.log('User updated successfully:', updatedUser);
-        return updatedUser;
+      const updatedUser = await response.json();
+      setSelectedUser(updatedUser)
+      console.log('User updated successfully:', updatedUser);
+      return updatedUser;
     } catch (error) {
-        console.error('Error updating user:', error.message);
-        throw error;
+      console.error('Error updating user:', error.message);
+      throw error;
     }
   }
 
@@ -317,6 +320,13 @@ const UserDetails = (props) => {
               onClick={handleSendPasswordReset}
             >
               Send Password Reset
+            </Button>
+            <Button
+              type="primary"
+              icon={<CreditCard size={16} />}
+              onClick={() => setIsUpdateCardModalVisible(true)}
+            >
+              Update Card Data
             </Button>
           </ActionsPanel>
         </Card>
@@ -442,6 +452,12 @@ const UserDetails = (props) => {
         userId={selectedUser.id}
         onSuccess={fetchJointAccounts}
       />
+<Elements stripe={stripePromise}>      <UpdateCardModal
+        isVisible={isUpdateCardModalVisible}
+        onClose={() => setIsUpdateCardModalVisible(false)}
+        stripeCustomerId={selectedUser.stripeCustomerId}
+      /></Elements>
+
     </DetailsContainer>
   );
 };
