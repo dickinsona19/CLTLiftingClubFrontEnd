@@ -110,7 +110,7 @@ const AdminLogin = () => {
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      if (values.email === 'cltlifting' && values.password === 'ADMIN') {
+      if (values.email === 'cltlifting' && values.password === 'NewCltCrew') {
         setUser({
           id: '1',
           email: values.email,

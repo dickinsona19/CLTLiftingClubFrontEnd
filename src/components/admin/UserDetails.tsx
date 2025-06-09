@@ -1,7 +1,7 @@
 import { Card, Descriptions, Space, Tag, Button, Input, message } from 'antd';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
-import { Edit2, Save, X, Copy, Send, Users, CreditCard } from 'lucide-react';
+import { Edit2, Save, X, Copy, Send, Users, CreditCard, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import JointAccountModal from './JointAccountModal';
 import UpdateCardModal from './UpdateCardModal';
@@ -241,7 +241,35 @@ const UserDetails = (props) => {
       throw error;
     }
   }
-
+  async function HandleSendAndroidLink(userId) {
+    // Validate userId
+    if (!userId || isNaN(userId)) {
+      throw new Error("Invalid userId. Please provide a valid number.");
+    }
+  
+    const apiUrl = `https://boss-lifting-club-api.onrender.com/${userId}/sendAndroidEmail`; // Update to your API URL
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData}`);
+      }
+  
+      const result = await response.text();
+      console.log('Email sent successfully:', result);
+      return result; // e.g., "Test email sent to user@example.com"
+    } catch (error) {
+      console.error('Error sending test email:', error.message);
+      throw error; // Re-throw for caller to handle if needed
+    }
+  }
   const handleSave = async () => {
     if (!validateReferralCode(editedCode)) {
       return;
@@ -328,6 +356,13 @@ const UserDetails = (props) => {
             >
               Update Card Data
             </Button>
+            <Button
+              type="primary"
+              icon={<Phone size={16} />}
+              onClick={()=> HandleSendAndroidLink(selectedUser.id)}
+            >
+              Send Android Download 
+            </Button>
           </ActionsPanel>
         </Card>
 
@@ -376,6 +411,9 @@ const UserDetails = (props) => {
                         <Save size={16} />
                       </EditButton>
                       <EditButton onClick={handleCancel} title="Cancel">
+                        <X size={16} />
+                      </EditButton>
+                        <EditButton onClick={handleCancel} title="Cancel">
                         <X size={16} />
                       </EditButton>
                     </ActionButtons>
