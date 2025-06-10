@@ -168,17 +168,21 @@ const PhonenumberModal: React.FC<PhonenumberModalProps> = ({
       <Container>
         {inputPhoneNumber ? (
           <>
-            <InputContainer>
-              <Label>Enter your phone number</Label>
-              <InputWrapper>
-                <Phone size={18} />
-                <StyledInput
-                  placeholder="(555) 555-5555"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-              </InputWrapper>
-            </InputContainer>
+<InputContainer>
+  <Label>Enter your phone number</Label>
+  <InputWrapper>
+    <Phone size={18} />
+    <StyledInput
+      placeholder="(555) 555-5555"
+      value={phoneNumber}
+      onChange={(e) => {
+        const input = e.target.value;
+        const filteredInput = input.replace(/[^0-9]/g, '');
+        setPhoneNumber(filteredInput);
+      }}
+    />
+  </InputWrapper>
+</InputContainer>
             <ActionButton
               onClick={() => { 
                 setInputPhoneNumber(false);
