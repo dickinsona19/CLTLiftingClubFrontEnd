@@ -36,7 +36,7 @@ const MainContent = styled.div`
   max-width: 800px;
 `;
 
-const Tagline = styled(motion.p)`
+const Tagline = styled(motion.h1)`
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 1rem;
@@ -125,7 +125,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
           >
-            CLT Lifting Club
+            CLT Lifting Club: Weight Lifting Gym in Charlotte, NC
           </Tagline>
           <Statement
             initial={{ opacity: 0, y: 20 }}
