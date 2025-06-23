@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 
 const HeroSection = styled.section`
   height: 100vh;
@@ -106,12 +107,82 @@ const SecondaryButton = styled(motion.button)`
   }
 `;
 
+const ScrollIndicator = styled(motion.div)`
+  position: absolute;
+  bottom: 2rem;
+
+  transform: translateX(-50%);
+  z-index: 2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  &:hover {
+    transform: translateX(-50%) translateY(-3px);
+  }
+
+  @media (max-width: 768px) {
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    &:hover {
+      transform: translateX(-50%) translateY(-3px);
+    }
+  }
+`;
+
+const ScrollText = styled.span`
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+`;
+
+const ScrollArrow = styled(motion.div)`
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${ScrollIndicator}:hover & {
+    color: white;
+    transform: translateY(2px);
+  }
+`;
+
+const bounceAnimation = {
+  y: [0, -8, 0],
+  transition: {
+    duration: 2,
+    repeat: Infinity,
+    ease: "easeInOut"
+  }
+};
+
 interface HeroProps {
   onJoinClick: () => void;
   onFreePassClick: () => void;
 }
 
 export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
+  const scrollToCommunity = () => {
+    // Scroll to the Instagram widget section
+    const instagramSection = document.querySelector('[data-section="instagram"]');
+    if (instagramSection) {
+      instagramSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Fallback: scroll down by viewport height
+      window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    }
+  };
+
   return (
     <HeroSection>
       <HeroContent
@@ -142,14 +213,26 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             transition={{ delay: 0.6, duration: 0.8 }}
           >
             <PrimaryButton to="/signup?contract=Founding" >
-              Get Started
+              Memberships
             </PrimaryButton>
-            <SecondaryButton onClick={onJoinClick}>
-              Learn More
-            </SecondaryButton>
+
           </CTAContainer>
         </MainContent>
       </HeroContent>
+
+      <ScrollIndicator
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        onClick={scrollToCommunity}
+      >
+        <ScrollText>Community</ScrollText>
+        <ScrollArrow
+          animate={bounceAnimation}
+        >
+          <ChevronDown size={24} />
+        </ScrollArrow>
+      </ScrollIndicator>
     </HeroSection>
   );
 };

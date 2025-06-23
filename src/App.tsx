@@ -23,6 +23,7 @@ import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
 import InstagramWidget from './components/InstagramWidget';
 
+
 const GlobalStyle = createGlobalStyle`
   * {
     margin: 0;
@@ -87,14 +88,12 @@ function HomePage() {
   return (
     <>
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
-      <div>
-        <InstagramWidget />
-      </div>
       <div ref={freePassRef}>
         <FreePass />
       </div>
-
-
+      <div>
+        <InstagramWidget />
+      </div>
       <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
       <ImageCarousel images={gymImages} />
       <div ref={recoveryRef}>

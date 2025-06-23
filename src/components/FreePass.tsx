@@ -282,7 +282,7 @@ export const FreePass = () => {
   return (
     <Section>
       <Container>
-        <PromoSection
+        {/* <PromoSection
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
@@ -318,7 +318,7 @@ export const FreePass = () => {
               <HighlightText>Get a complimentary equipment orientation</HighlightText>
             </HighlightContent>
           </PromoHighlight>
-        </PromoSection>
+        </PromoSection> */}
 
         <FormWrapper
           initial={{ opacity: 0, x: 30 }}
