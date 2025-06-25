@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Features } from './components/Features';
@@ -21,6 +21,8 @@ import { AdminProvider } from './contexts/AdminContext';
 import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
+import InstagramWidget from './components/InstagramWidget';
+
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -86,8 +88,11 @@ function HomePage() {
   return (
     <>
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
-      <div ref={membershipRef}>
-        <Membership/>
+      <div ref={freePassRef}>
+        <FreePass />
+      </div>
+      <div>
+        <InstagramWidget />
       </div>
       <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
       <ImageCarousel images={gymImages} />
@@ -98,15 +103,27 @@ function HomePage() {
         <Membership/>
       </div>
       <LocationMap/>
-      <div ref={freePassRef}>
-        <FreePass />
-      </div>
+
       <FAQ />
     </>
   );
 }
 
 function App() {
+
+  const InstagramFeed = () => {
+    useEffect(() => {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.lightwidget.com/widgets/lightwidget.js';
+      script.async = true;
+      document.body.appendChild(script);
+  
+      return () => {
+        document.body.removeChild(script);
+      };
+    }, []);
+  }
+    
   return (
     <Router>
       <AdminProvider>

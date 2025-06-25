@@ -138,8 +138,9 @@ export const Navbar = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <NavLink to="/signup?contract=Founding" >
-              Sign Up
+            {/* <NavLink to="/signup?contract=Founding" > */}
+            <NavLink to="Memberships" >
+              Memberships
             </NavLink>
             {/* <NavLink to="/free-pass" >
               Free Pass
