@@ -26,94 +26,29 @@ const Section = styled.section`
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  gap: 4rem;
   position: relative;
   z-index: 1;
-  
-  @media (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-  }
 `;
 
-const PromoSection = styled(motion.div)`
-  padding: 3rem;
-  border-radius: 30px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-  
-  @media (max-width: 1023px) {
-    text-align: center;
-    padding: 2rem;
-  }
-`;
-
-const Title = styled.h2`
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+const Title = styled(motion.h2)`
+  text-align: center;
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: white;
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-  line-height: 1.2;
 `;
 
-const PromoHighlight = styled(motion.div)`
-  margin: 2rem 0;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-
-  @media (max-width: 1023px) {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const IconWrapper = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
-`;
-
-const HighlightContent = styled.div`
-  flex: 1;
-`;
-
-const HighlightTitle = styled.h3`
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: white;
-`;
-
-const HighlightText = styled.p`
+const Subtitle = styled(motion.p)`
+  text-align: center;
+  font-size: clamp(1rem, 3vw, 1.25rem);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  line-height: 1.8;
+  letter-spacing: 1px;
 `;
 
 const FormWrapper = styled(motion.div)`
@@ -123,6 +58,8 @@ const FormWrapper = styled(motion.div)`
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  margin: 0 auto;
 
   @media (max-width: 640px) {
     padding: 2rem;
@@ -282,48 +219,27 @@ export const FreePass = () => {
   return (
     <Section>
       <Container>
-        {/* <PromoSection
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+        <Title
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
         >
-          <Title>Experience Excellence</Title>
-          
-          <PromoHighlight whileHover={{ scale: 1.02 }}>
-            <IconWrapper>
-              <Calendar size={24} />
-            </IconWrapper>
-            <HighlightContent>
-              <HighlightTitle>Full Day Access</HighlightTitle>
-              <HighlightText>Experience all our premium amenities and equipment</HighlightText>
-            </HighlightContent>
-          </PromoHighlight>
-
-          <PromoHighlight whileHover={{ scale: 1.02 }}>
-            <IconWrapper>
-              <Clock size={24} />
-            </IconWrapper>
-            <HighlightContent>
-              <HighlightTitle>Flexible Timing</HighlightTitle>
-              <HighlightText>Choose any day that works best for you</HighlightText>
-            </HighlightContent>
-          </PromoHighlight>
-
-          <PromoHighlight whileHover={{ scale: 1.02 }}>
-            <IconWrapper>
-              <Dumbbell size={24} />
-            </IconWrapper>
-            <HighlightContent>
-              <HighlightTitle>Expert Guidance</HighlightTitle>
-              <HighlightText>Get a complimentary equipment orientation</HighlightText>
-            </HighlightContent>
-          </PromoHighlight>
-        </PromoSection> */}
+          Experience Excellence
+        </Title>
+        <Subtitle
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+        >
+          Get your free day pass and discover what makes CLT Lifting Club the premier destination for serious athletes
+        </Subtitle>
 
         <FormWrapper
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
         >
           <FormTitle>Claim Your Free Pass</FormTitle>
           <FormSubtitle>Start your journey to excellence today</FormSubtitle>

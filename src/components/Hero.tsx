@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
+import GymInterior from '../assets/MainFloor.jpg';
 
 const HeroSection = styled.section`
   height: 100vh;
@@ -10,9 +11,15 @@ const HeroSection = styled.section`
   align-items: center;
   justify-content: center;
   color: white;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url('https://images.unsplash.com/photo-1638805981949-362f5964521e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80')
-    no-repeat center/cover;
+  background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2)),
+    url(${GymInterior}) no-repeat center/cover;
+  
+  @media (max-width: 768px) {
+    background-position: center 30%;
+    background-size: cover;
+    align-items: flex-start;
+    padding-top: 25vh;
+  }
   
   &:after {
     content: '';
@@ -31,19 +38,35 @@ const HeroContent = styled(motion.div)`
   padding: 0 2rem;
   z-index: 1;
   width: 100%;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+    padding: 0 1.5rem;
+  }
 `;
 
 const MainContent = styled.div`
   max-width: 800px;
+  
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 const Tagline = styled(motion.p)`
   font-size: clamp(1.25rem, 3vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 1rem;
   font-weight: 500;
   letter-spacing: 2px;
   text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+  }
 `;
 
 const Statement = styled(motion.h2)`
@@ -51,7 +74,14 @@ const Statement = styled(motion.h2)`
   font-weight: 300;
   line-height: 1.4;
   margin-bottom: 2rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Emphasis = styled.span`
@@ -65,11 +95,16 @@ const CTAContainer = styled(motion.div)`
   gap: 1.5rem;
   align-items: center;
   flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    justify-content: center;
+    gap: 1rem;
+  }
 `;
 
 const PrimaryButton = styled(Link)`
   padding: clamp(1rem, 2vw, 1.25rem) clamp(2rem, 4vw, 3rem);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   color: white;
   border: 2px solid white;
   border-radius: 50px;
@@ -80,45 +115,38 @@ const PrimaryButton = styled(Link)`
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  display: inline-block;
+  
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
   
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-  }
-`;
-
-const SecondaryButton = styled(motion.button)`
-  padding: clamp(1rem, 2vw, 1.25rem) clamp(2rem, 4vw, 3rem);
-  background: transparent;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+    color: white;
   }
 `;
 
 const ScrollIndicator = styled(motion.div)`
   position: absolute;
   bottom: 2rem;
-
+  left: 50%;
   transform: translateX(-50%);
   z-index: 2;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
-  flex-direction: column;
-
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     transform: translateX(-50%) translateY(-3px);
@@ -126,34 +154,26 @@ const ScrollIndicator = styled(motion.div)`
 
   @media (max-width: 768px) {
     bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    
-    &:hover {
-      transform: translateX(-50%) translateY(-3px);
-    }
   }
 `;
 
-const ScrollText = styled.span`
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.25rem;
-`;
-
 const ScrollArrow = styled(motion.div)`
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   ${ScrollIndicator}:hover & {
     color: white;
     transform: translateY(2px);
+    background: rgba(255, 255, 255, 0.15);
   }
 `;
 
@@ -215,7 +235,6 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             <PrimaryButton to="/signup?contract=Founding" >
               Memberships
             </PrimaryButton>
-
           </CTAContainer>
         </MainContent>
       </HeroContent>
@@ -226,7 +245,6 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
         transition={{ delay: 1, duration: 0.8 }}
         onClick={scrollToCommunity}
       >
-        <ScrollText>Community</ScrollText>
         <ScrollArrow
           animate={bounceAnimation}
         >

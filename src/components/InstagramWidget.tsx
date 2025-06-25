@@ -3,6 +3,13 @@ import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
+import CloseUpHexLight from '../assets/CloseUpHexLight.jpg'
+import TwoDudes from '../assets/2Dudes.jpg'
+import CLTSign from '../assets/CLTSign.jpg'
+import Attachment from '../assets/attachments.jpg'
+import Redbull from '../assets/RedbullCar.jpg'
+import PosingRoom from '../assets/PosingRoom.jpg'
+import CoolSauna from '../assets/CoolSaunaPics.jpg'
 
 const Section = styled.section`
   padding: 0;
@@ -37,14 +44,13 @@ const SlideImage = styled.img`
 `;
 
 const communityPhotos = [
-  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1574680096145-d05b474e2155?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1517344800994-80b20463999c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-  'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
+  CloseUpHexLight,
+  CLTSign,
+  TwoDudes,
+  Attachment,
+  Redbull,
+  PosingRoom,
+  CoolSauna
 ];
 
 const InstagramWidget = () => {
