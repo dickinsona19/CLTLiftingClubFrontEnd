@@ -8,6 +8,7 @@ import { ImageCarousel } from './components/ImageCarousel';
 import { Recovery } from './components/Recovery';
 import { Membership } from './components/Membership';
 import { FreePass } from './components/FreePass';
+import { VideoSection } from './components/VideoSection';
 import { FAQ } from './components/FAQ';
 import { SignUpForm } from './components/signupPage/SignUpForm';
 import SuccessPage from './components/signupPage/SuccessPage';
@@ -88,12 +89,13 @@ function HomePage() {
   return (
     <>
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
-      <div ref={freePassRef}>
-        <FreePass />
-      </div>
       <div>
         <InstagramWidget />
       </div>
+      <div ref={freePassRef}>
+        <FreePass />
+      </div>
+      <VideoSection />
       <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
       <ImageCarousel images={gymImages} />
       <div ref={recoveryRef}>

@@ -80,7 +80,7 @@ const Statement = styled(motion.h2)`
   @media (max-width: 768px) {
     font-size: clamp(1.75rem, 8vw, 2.5rem);
     line-height: 1.3;
-    margin-bottom: 1.5rem;
+    margin-bottom: 3rem; /* Increased from 1.5rem to 3rem for more space */
   }
 `;
 
@@ -99,6 +99,7 @@ const CTAContainer = styled(motion.div)`
   @media (max-width: 768px) {
     justify-content: center;
     gap: 1rem;
+    margin-top: 2rem; /* Added extra margin on mobile */
   }
 `;
 
@@ -120,6 +121,7 @@ const PrimaryButton = styled(Link)`
   display: inline-block;
   
   @media (max-width: 768px) {
+    margin-top: 14em;
     padding: 1rem 2rem;
     font-size: 0.9rem;
     letter-spacing: 1px;
@@ -154,6 +156,12 @@ const ScrollIndicator = styled(motion.div)`
 
   @media (max-width: 768px) {
     bottom: 1.5rem;
+    left: 48%; /* Moved from 50% to 30% to position it more to the left */
+    transform: translateX(-30%);
+    
+    &:hover {
+      transform: translateX(-30%) translateY(-3px);
+    }
   }
 `;
 

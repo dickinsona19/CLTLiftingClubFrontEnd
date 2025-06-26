@@ -217,7 +217,7 @@ export const FreePass = () => {
   };
 
   return (
-    <Section>
+    <Section data-section="free-pass">
       <Container>
         <Title
           initial={{ opacity: 0, y: 30 }}
