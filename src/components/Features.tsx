@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { Dumbbell, Users, Trophy } from 'lucide-react';
 import NikeCloseUp from '../assets/NikeCloseUp.jpg'
 
-
-
 const Section = styled.section`
   min-height: 100vh; /* Added for full-screen effect */
   padding: 4rem 1rem; /* Base padding for mobile */
@@ -219,7 +217,7 @@ export const Features = ({ onSaunaClick, onColdPlungeClick }: FeaturesProps) => 
           </IconWrapper>
           <Title>Champion Results</Title>
           <Description>
-               Join a community of dedicated athletes and individuals who’ve achieved impressive results through hard work and smart training.
+               Join a community of dedicated athletes and individuals who've achieved impressive results through hard work and smart training.
           </Description>
           <Button onClick={onColdPlungeClick}>
             Explore

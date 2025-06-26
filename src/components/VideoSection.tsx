@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, ArrowRight } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import mainVideo from '../assets/MainVideo.mp4'
+
 const Section = styled.section`
   padding: 0;
   background: #000;
@@ -158,7 +160,98 @@ const VolumeControl = styled(motion.button)`
   }
 `;
 
-export const VideoSection = () => {
+const CTAButtons = styled(motion.div)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  pointer-events: auto;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+  }
+`;
+
+const PrimaryButton = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid white;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+`;
+
+const SecondaryButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 3rem;
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+`;
+
+interface VideoSectionProps {
+  onFreePassClick?: () => void;
+}
+
+export const VideoSection = ({ onFreePassClick }: VideoSectionProps) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -185,6 +278,12 @@ export const VideoSection = () => {
     if (videoRef.current) {
       videoRef.current.muted = true;
       videoRef.current.play().catch(console.error);
+    }
+  };
+
+  const handleFreePassClick = () => {
+    if (onFreePassClick) {
+      onFreePassClick();
     }
   };
 
@@ -219,9 +318,26 @@ export const VideoSection = () => {
           >
             Experience CLT Lifting
           </VideoTitle>
+
         </VideoOverlay>
 
 
+
+        <CTAButtons
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          <PrimaryButton to="/membership">
+            <span>Join Now</span>
+            <ArrowRight size={20} />
+          </PrimaryButton>
+          
+          <SecondaryButton onClick={handleFreePassClick}>
+            <span>Try Free Pass</span>
+          </SecondaryButton>
+        </CTAButtons>
       </VideoWrapper>
     </Section>
   );

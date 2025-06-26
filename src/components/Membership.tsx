@@ -4,7 +4,7 @@ import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
 import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useState } from 'react';
-import BigWeight from '../assets/BigWeight.jpg'
+import BigWeight from '../assets/TwoChairs.jpg'
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
@@ -32,7 +32,6 @@ const Section = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
 
   }
 `;

@@ -124,15 +124,15 @@ const IconWrapper = styled.span`
 const faqData = [
   {
     question: "What equipment do you have?",
-    answer: "We offer high-quality equipment, including power racks, bars, plates, benches, and a selection of specialty accessories for strength training and powerlifting."
+    answer: "We offer high-quality equipment, including power racks, bars, plates, benches, and a selection of specialty accessories for strength training."
   },
   {
     question: "Do you offer personal training?",
-    answer: "Yes, we have experienced trainers available for one-on-one sessions, with backgrounds in powerlifting, bodybuilding, and strength sports."
+    answer: "We do not offer personal training, but you're welcome to bring your own at no cost."
   },
   {
     question: "What are your hours?",
-    answer: "M-T: 5 AM - 9PM, F: 5AM - 8PM, Saturday: 7AM - 5PM, Sunday: 10AM - 5PM"
+    answer: "M-T: 5 AM - 9PM, F: 5AM - 8PM, Saturday: 7AM - 5PM, Sunday: 7AM - 5PM"
   },
   {
     question: "Is there a contract?",
@@ -140,7 +140,7 @@ const faqData = [
   },
   {
     question: "What's included in membership?",
-    answer: "Members get unlimited access to all equipment, recovery facilities including sauna and cold plunge, and exclusive member events."
+    answer: "Members get unlimited access to all equipment, recovery facilities including sauna, and exclusive member events."
   }
 ];
 

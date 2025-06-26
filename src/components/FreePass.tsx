@@ -219,21 +219,7 @@ export const FreePass = () => {
   return (
     <Section data-section="free-pass">
       <Container>
-        <Title
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          Experience Excellence
-        </Title>
-        <Subtitle
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-        >
-          Get your free day pass and discover what makes CLT Lifting Club the premier destination for serious athletes
-        </Subtitle>
+      
 
         <FormWrapper
           initial={{ opacity: 0, y: 30 }}
