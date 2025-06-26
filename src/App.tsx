@@ -25,6 +25,7 @@ import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
 import InstagramWidget from './components/InstagramWidget';
+import { LocationMap } from './components/LocationMap';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -101,6 +102,7 @@ function HomePage() {
       <div ref={recoveryRef}>
         <Recovery />
       </div>
+      <LocationMap/>
       <FAQ />
       <Footer />
     </>
