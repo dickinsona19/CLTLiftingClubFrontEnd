@@ -8,20 +8,24 @@ import { ImageCarousel } from './components/ImageCarousel';
 import { Recovery } from './components/Recovery';
 import { Membership } from './components/Membership';
 import { FreePass } from './components/FreePass';
+import { VideoSection } from './components/VideoSection';
 import { FAQ } from './components/FAQ';
+import { Footer } from './components/Footer';
 import { SignUpForm } from './components/signupPage/SignUpForm';
 import SuccessPage from './components/signupPage/SuccessPage';
 import TermsAndConditions from './components/signupPage/TermsAndConditions';
-import { LocationMap } from './components/LocationMap';
 import SignWaiver from './components/SignWaiver';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ResetPassword from './components/ResetPassword';
+import MembershipPage from './components/pages/MembershipPage';
+import CommunityPage from './components/pages/CommunityPage';
 import { AdminProvider } from './contexts/AdminContext';
 import JustDoIt from './assets/JustDoIt.jpg'
 import CloseWeightRack from './assets/CloseWeightRack.jpg'
 import CloseUpDumbell from './assets/CloseUpDumbell.jpg'
 import InstagramWidget from './components/InstagramWidget';
+import { LocationMap } from './components/LocationMap';
 
 
 const GlobalStyle = createGlobalStyle`
@@ -88,23 +92,19 @@ function HomePage() {
   return (
     <>
       <Hero onJoinClick={scrollToMembership} onFreePassClick={scrollToFreePass} />
-      <div ref={freePassRef}>
-        <FreePass />
-      </div>
       <div>
         <InstagramWidget />
       </div>
-      <Features onSaunaClick={scrollToRecovery} onColdPlungeClick={scrollToMembership} />
-      <ImageCarousel images={gymImages} />
+      <div ref={freePassRef}>
+        <FreePass />
+      </div>
+      <VideoSection onFreePassClick={scrollToFreePass} />
       <div ref={recoveryRef}>
         <Recovery />
       </div>
-      <div >
-        <Membership/>
-      </div>
       <LocationMap/>
-
       <FAQ />
+      <Footer />
     </>
   );
 }
@@ -129,9 +129,12 @@ function App() {
       <AdminProvider>
         <GlobalStyle />
         {location.pathname !== '/signWaiver' && 
-         !location.pathname.includes('/admin') && <Navbar />}
+         !location.pathname.includes('/admin') && 
+         location.pathname !== '/membership' && <Navbar />}
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/membership" element={<MembershipPage />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/success" element={<SuccessPage />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

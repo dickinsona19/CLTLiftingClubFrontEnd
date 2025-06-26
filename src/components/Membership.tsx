@@ -4,7 +4,7 @@ import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
 import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useState } from 'react';
-import BigWeight from '../assets/BigWeight.jpg'
+import BigWeight from '../assets/TwoChairs.jpg'
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
@@ -32,7 +32,7 @@ const Section = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
 
   }
 `;
@@ -125,6 +125,41 @@ const ActivationFee = styled.div`
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
 `;
+
+const PaymentNote = styled.div`
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+`;
+
+const TotalAmount = styled.div`
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+`;
+
 const Features = styled.ul`
   list-style: none;
   padding: 0;
@@ -350,8 +385,12 @@ const onChange = (e: RadioChangeEvent) => {
           >
             <PlanName>Annual</PlanName>
             <Price>$79 <span>/ month</span></Price>
-            <ActivationFee>$50 Activation Fee</ActivationFee>
-            <ActivationFee>Paid in full - 948</ActivationFee>
+            <PaymentNote>💳 Paid in Full Upfront</PaymentNote>
+            <TotalAmount>
+              <span className="label">Total Amount Due Today:</span>
+              <span className="amount">$998</span>
+            </TotalAmount>
+            <ActivationFee>$50 Activation Fee + $948 Annual Fee</ActivationFee>
             <Features>
               <Feature>
                 <Calendar size={20} />

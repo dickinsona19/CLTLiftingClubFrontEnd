@@ -203,7 +203,7 @@ export const LocationMap = () => {
               <InfoTitle>Hours</InfoTitle>
               <InfoText>
                 M-T: 5 AM - 9PM, F: 5AM - 8PM<br />
-                Saturday: 7AM - 5PM, Sunday: 10AM - 5PM
+                Saturday: 7AM - 5PM, Sunday: 7AM - 5PM
               </InfoText>
             </InfoContent>
           </InfoItem>

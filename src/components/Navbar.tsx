@@ -27,6 +27,7 @@ const Logo = styled(Link)`
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   letter-spacing: 2px;
   cursor: pointer;
+  text-decoration: none;
 `;
 
 const MenuButton = styled.button`
@@ -60,6 +61,46 @@ const NavLinks = styled(motion.div)<{ isOpen: boolean; scrolled: boolean }>`
 `;
 
 const NavLink = styled(Link)`
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.125rem;
+  transition: all 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0.75rem;
+    left: 1rem;
+    right: 1rem;
+    height: 1px;
+    background: white;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+    &:after {
+      transform: scaleX(1);
+    }
+  }
+  
+  @media (min-width: 768px) {
+    width: auto;
+    padding: 0.5rem 0;
+  }
+`;
+const NavLinkInstagram = styled.a`
   display: block;
   width: 100%;
   padding: 1rem;
@@ -138,13 +179,16 @@ export const Navbar = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {/* <NavLink to="/signup?contract=Founding" > */}
-            <NavLink to="Memberships" >
+             <NavLink to="/membership">
               Memberships
             </NavLink>
-            {/* <NavLink to="/free-pass" >
-              Free Pass
-            </NavLink> */}
+            <NavLink to="/community">
+              Community
+            </NavLink>
+
+            <NavLinkInstagram href='https://www.instagram.com/cltliftingclub/' target="_blank" rel="noopener noreferrer">
+            Instagram
+            </NavLinkInstagram>
           </NavLinks>
         )}
       </AnimatePresence>
