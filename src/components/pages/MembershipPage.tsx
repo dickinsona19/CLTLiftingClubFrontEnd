@@ -11,7 +11,6 @@ const PageContainer = styled.div`
 const MembershipPage = () => {
   return (
     <PageContainer>
-      <Navbar />
       <Membership />
       <Footer />
     </PageContainer>
