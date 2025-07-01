@@ -4,12 +4,12 @@ import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Added import for Link
 import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useState } from 'react';
-import BigWeight from '../assets/TwoChairs.jpg'
+import BigWeight from '../assets/RedbullCar.jpg'
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
   background: url(${BigWeight}) no-repeat center/cover; /* No fixed by default */
-  background-position: 50% 75%;
+  background-position: 50% 60%;
   position: relative;
   color: white;
   display: flex;
