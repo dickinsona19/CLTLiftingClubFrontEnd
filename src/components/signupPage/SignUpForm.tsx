@@ -37,6 +37,7 @@ const ContentWrapper = styled.div`
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  margin-top: 4em;
   @media (max-width: 1200px) {
     flex-direction: column;
     gap: 2rem;
@@ -317,7 +318,7 @@ export const SignUpForm: React.FC = () => {
             >
               <FounderTag>
                 <Star size={14} />
-                <span>{contract === "Founding" ? "Founding Member" : (contract === "Annual" ? "Annual" : "")}</span>
+                <span>{contract === "Founding" ? "Monthly Membership" : (contract === "Annual" ? "Annual" : "")}</span>
               </FounderTag>
               
               <PriceHeading>CLT Lifting Club</PriceHeading>
@@ -352,10 +353,6 @@ export const SignUpForm: React.FC = () => {
                 </BenefitItem>
                 <BenefitItem>
                   <Star size={16} />
-                  <span>Founder Status Benefits</span>
-                </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
                   <span>Community Events</span>
                 </BenefitItem>
               </BenefitsList>
@@ -366,7 +363,7 @@ export const SignUpForm: React.FC = () => {
         <FormWrapper>
           <FormHeader>
             <FormTitle>Join CLT Lifting Club</FormTitle>
-            <FormSubtitle>Become a founding member today</FormSubtitle>
+            <FormSubtitle>Become a member today</FormSubtitle>
           </FormHeader>
 
           <StyledForm form={form} layout="vertical" onFinish={handleSubmit}>

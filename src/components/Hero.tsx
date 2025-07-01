@@ -231,7 +231,7 @@ export const Hero = ({ onJoinClick, onFreePassClick }: HeroProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Founding Members
+            Memberships
             <br />
             <Emphasis>Starting at $99 per month!</Emphasis>
           </Statement>
