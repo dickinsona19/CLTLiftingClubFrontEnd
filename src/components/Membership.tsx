@@ -418,7 +418,7 @@ const onChange = (e: RadioChangeEvent) => {
         </Grid>
 
         <MaintenanceFee>
-          <p>Every membership includes a bi-annual maintenance fee of $59.99, conveniently billed every six months following account creation.</p>
+          <p>Every membership includes a bi-annual maintenance fee of $59.99.</p>
         </MaintenanceFee>
       </Container>
     </Section>
