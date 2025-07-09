@@ -159,11 +159,12 @@ const StyledForm = styled(Form)`
   }
 `;
 
-const stripePromise = loadStripe("pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X1XqAuwzNiMdc5KQI8yYBRCI2qzGoT9WW9eptoZQhNOMR2mxSaxo00AtKHFX5N");
+const stripePromise = loadStripe("pk_test_51R048D4PBwB8fzGsWnEnjgrfpS24n4rJ9kSQ3NUUV1kuw9HNjstVd02I8tjD6N05s39yTvkCvmJqLK0IK5ud5nPq00cVBTVZvf");
 
 export const SignUpForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const contract = searchParams.get('contract');
+  const familyUserId = searchParams.get('userId');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [form] = Form.useForm();
@@ -178,7 +179,7 @@ export const SignUpForm: React.FC = () => {
   const [referralCode, setReferralCode] = useState('')
   const [referedUser, setReferredUser] = useState();
 
-  const baseAPI = 'https://boss-lifting-club-api.onrender.com'
+  const baseAPI = 'http://localhost:8082'
 
   const sendOTP = async (phone?: string) => {
     setLoading(true);
@@ -267,7 +268,7 @@ export const SignUpForm: React.FC = () => {
           return;
         }
       }
-
+if(contract !== "Family"){
       const signupResponse = await fetch(baseAPI + '/signupWithCard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -287,7 +288,23 @@ export const SignUpForm: React.FC = () => {
         message.error(signupData.error || 'Failed to sign up');
         return;
       }
-
+    }else{
+      console.log('Family');
+      console.log(familyUserId);
+      const familySignupResponse = await fetch(baseAPI + `/${familyUserId}/add-child`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          phoneNumber,
+          password
+        }),
+      });
+      window.location.href = '/confirm';
+      const familySignupData = await familySignupResponse.json();
+      console.log(familySignupData);
+    }
       const { sessionId } = signupData;
       const stripe = await stripePromise;
       const { error } = await stripe!.redirectToCheckout({ sessionId });
@@ -318,22 +335,33 @@ export const SignUpForm: React.FC = () => {
             >
               <FounderTag>
                 <Star size={14} />
-                <span>{contract === "Founding" ? "Monthly Membership" : (contract === "Annual" ? "Annual" : "")}</span>
+                <span>{contract === "Founding" ? "Monthly Membership" : (contract === "Annual" ? "Annual" : "Family Membership")}</span>
               </FounderTag>
               
               <PriceHeading>CLT Lifting Club</PriceHeading>
               
-              <PriceAmount>
-                <span className="currency">$</span>
-                <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
-                <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
-              </PriceAmount>
-              
+              {contract === "Family" ? (
+                <PriceAmount>
+                  <span className="currency">$</span>
+                  <span className="amount">50</span>
+                  <span className="period">/month</span>
+                </PriceAmount>
+              ) : (
+                <PriceAmount>
+                  <span className="currency">$</span>
+                  <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
+                  <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
+                </PriceAmount>
+              )}
+              {contract === "Founding" || contract === "Annual" && (
               <PriceDetail>
-                <div>
-                  <span className="label">Activation Fee</span>
-                  <span className="value"> $50</span>
-                </div>
+               
+                               <div>
+                               <span className="label">Activation Fee</span>
+                               <span className="value"> $50</span>
+                             </div>  
+               
+ 
                 {contract === "Founding" && (
                   <div>
                     <span className="label">Tax (5%)</span>
@@ -341,19 +369,19 @@ export const SignUpForm: React.FC = () => {
                   </div>
                 )}
               </PriceDetail>
-              
+               )}
               <BenefitsList>
                 <BenefitItem>
                   <Star size={16} />
-                  <span>Operating Hours: 5AM - 9PM</span>
+                  <span>Add a family member for $50/month</span>
                 </BenefitItem>
                 <BenefitItem>
                   <Star size={16} />
-                  <span>Premium Equipment</span>
+                  <span>Prorated Membership</span>
                 </BenefitItem>
                 <BenefitItem>
                   <Star size={16} />
-                  <span>Community Events</span>
+                  <span>Additional cost is made from the parent membership</span>
                 </BenefitItem>
               </BenefitsList>
             </PriceCard>
@@ -410,7 +438,7 @@ export const SignUpForm: React.FC = () => {
             }
 
             <MaintenanceFeeNote>
-              Note: Every membership includes a bi-annual maintenance fee of $59.99.
+              Note: {contract === 'Family' ? 'For family memberships, only the parent account pays the' : 'Every membership includes a'} bi-annual maintenance fee of $59.99.
             </MaintenanceFeeNote>
 
             <Form.Item name="termsAndConditions" valuePropName="checked" rules={[{ required: true, message: 'Please accept the terms and conditions' }]}>
