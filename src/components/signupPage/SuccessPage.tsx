@@ -85,7 +85,7 @@ const SuccessPage = () => {
         </IconWrapper>
         <Title>Welcome to CLT Lifting Club!</Title>
         <Message>
-          Congratulations on becoming a founding member! You'll be receiving updates about
+          Congratulations on becoming a member! You'll be receiving updates about
           the gym shortly. We're excited to have you join our community of dedicated athletes.
         </Message>
         <HomeButton to="/">
