@@ -70,21 +70,15 @@ interface JointAccountModalProps {
 const JointAccountModal = ({ isVisible, onClose, userId, onSuccess }: JointAccountModalProps) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-
+  console.log(userId)
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const response = await fetch(`https://boss-lifting-club-api.onrender.com/users/${userId}/joint-account`, {
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/${userId.toString()}/sendFamilyInviteEmail?newCusEmail=${values.email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          phoneNumber: values.phoneNumber,
-        }),
       });
 
       if (!response.ok) {
@@ -115,21 +109,6 @@ const JointAccountModal = ({ isVisible, onClose, userId, onSuccess }: JointAccou
         layout="vertical"
         onFinish={handleSubmit}
       >
-        <FormItem
-          name="firstName"
-          label="First Name"
-          rules={[{ required: true, message: 'Please enter first name' }]}
-        >
-          <Input placeholder="Enter first name" />
-        </FormItem>
-
-        <FormItem
-          name="lastName"
-          label="Last Name"
-          rules={[{ required: true, message: 'Please enter last name' }]}
-        >
-          <Input placeholder="Enter last name" />
-        </FormItem>
 
         <FormItem
           name="email"
@@ -142,13 +121,6 @@ const JointAccountModal = ({ isVisible, onClose, userId, onSuccess }: JointAccou
           <Input placeholder="Enter email" />
         </FormItem>
 
-        <FormItem
-          name="phoneNumber"
-          label="Phone Number"
-          rules={[{ required: true, message: 'Please enter phone number' }]}
-        >
-          <Input placeholder="Enter phone number" />
-        </FormItem>
 
         <FormItem>
           <SubmitButton
@@ -157,7 +129,7 @@ const JointAccountModal = ({ isVisible, onClose, userId, onSuccess }: JointAccou
             loading={loading}
             icon={<Users size={16} />}
           >
-            Create Joint Account
+            Send Invite
           </SubmitButton>
         </FormItem>
       </Form>
