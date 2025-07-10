@@ -487,7 +487,7 @@ const UserDetails = (props) => {
       <JointAccountModal
         isVisible={isJointAccountModalVisible}
         onClose={() => setIsJointAccountModalVisible(false)}
-        userId={selectedUser.id}
+        userId={selectedUser.userStripeMemberId}
         onSuccess={fetchJointAccounts}
       />
 <Elements stripe={stripePromise}>      <UpdateCardModal
