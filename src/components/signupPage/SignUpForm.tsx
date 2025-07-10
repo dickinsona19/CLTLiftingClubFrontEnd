@@ -424,18 +424,22 @@ if(contract !== "Family"){
               <Input.Password size="large" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </Form.Item>
 
-            <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
-              <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
-            </Form.Item>
-            {referedUser &&
-            <MaintenanceFeeNote>
-              {referedUser === "Not Found" ? (
-                <>Cannot Find reference</>
-              ) : (
-                <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
-              )}
-            </MaintenanceFeeNote> 
-            }
+            {contract !== "Family" && (
+              <>
+                <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
+                  <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
+                </Form.Item>
+                {referedUser && (
+                  <MaintenanceFeeNote>
+                    {referedUser === "Not Found" ? (
+                      <>Cannot Find reference</>
+                    ) : (
+                      <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
+                    )}
+                  </MaintenanceFeeNote>
+                )}
+              </>
+            )}
 
             <MaintenanceFeeNote>
               Note: {contract === 'Family' ? 'For family memberships, only the parent account pays the' : 'Every membership includes a'} bi-annual maintenance fee of $59.99.
