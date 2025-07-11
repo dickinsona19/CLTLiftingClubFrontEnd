@@ -250,9 +250,13 @@ export const SignUpForm: React.FC = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+  
     try {
+
+  
+      // Handle OTP verification if not already validated
       if (!otpSent) {
-        showModal();
+        showModal(); // Assume this triggers OTP sending
         return;
       }
       if (!validatedOtp) {
@@ -262,62 +266,82 @@ export const SignUpForm: React.FC = () => {
           body: JSON.stringify({ phoneNumber: `+1 ${phoneNumber}`, otp: otpValue }),
         });
         const verifyData = await verifyResponse.json();
-        if (!verifyData.isValid) {
-          message.error('Invalid OTP');
+        if (!verifyResponse.ok || !verifyData.isValid) {
+          message.error(verifyData.error || 'Invalid OTP');
           setValidatedOtp(false);
           return;
         }
+        setValidatedOtp(true); // Update state on success
       }
-if(contract !== "Family"){
-      const signupResponse = await fetch(baseAPI + '/signupWithCard', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          phoneNumber,
-          password,
-          membershipName: "Founder",
-          referralId: referedUser?.id,
-          lockedInRate: contract === "Annual" ? "948.00" : "99.99"
-        }),
-      });
-      const signupData = await signupResponse.json();
-
-      if (!signupResponse.ok) {
-        message.error(signupData.error || 'Failed to sign up');
+  
+      let signupData;
+      if (contract !== 'Family') {
+        const signupResponse = await fetch(baseAPI + '/signupWithCard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            phoneNumber,
+            password,
+            membershipName: 'Founder',
+            referralId: referedUser?.id,
+            lockedInRate: contract === 'Annual' ? '948.00' : '99.99',
+          }),
+        });
+        signupData = await signupResponse.json();
+        if (!signupResponse.ok) {
+          message.error(signupData.error || 'Failed to sign up');
+          return;
+        }
+      } else {
+        if (!familyUserId) {
+          message.error('Family user ID is required');
+          return;
+        }
+        const familySignupResponse = await fetch(baseAPI + `/${familyUserId}/add-child`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            phoneNumber,
+            password,
+          }),
+        });
+        const familySignupData = await familySignupResponse.json();
+        if (!familySignupResponse.ok) {
+          message.error(familySignupData.error || 'Failed to add child');
+          return;
+        }
+        console.log('Family signup success:', familySignupData);
+        window.location.href = '/success'; // Redirect after success
+        return; // Exit early for Family case
+      }
+  
+      // Stripe checkout for non-Family contracts
+      const { sessionId } = signupData;
+      if (!sessionId) {
+        message.error('Payment session not created');
         return;
       }
-    }else{
-      console.log('Family');
-      console.log(familyUserId);
-      const familySignupResponse = await fetch(baseAPI + `/${familyUserId}/add-child`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          phoneNumber,
-          password
-        }),
-      });
-      window.location.href = '/success';
-      const familySignupData = await familySignupResponse.json();
-      console.log(familySignupData);
-    }
-      const { sessionId } = signupData;
       const stripe = await stripePromise;
-      const { error } = await stripe!.redirectToCheckout({ sessionId });
+      if (!stripe) {
+        message.error('Stripe initialization failed');
+        return;
+      }
+      const { error } = await stripe.redirectToCheckout({ sessionId });
       if (error) {
         message.error(`Card setup failed: ${error.message}`);
+        return;
       }
-    } catch {
+    } catch (error) {
+      console.error('Signup error:', error); // Log for debugging
       message.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <FormContainer>
       <ContentWrapper>
