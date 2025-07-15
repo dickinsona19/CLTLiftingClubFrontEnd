@@ -350,7 +350,8 @@ export const SignUpForm: React.FC = () => {
   useEffect(() => {
     const fetchPromo = async () => {
       try {
-        const response = await fetch(baseAPI + `/api/promos/by-token/${promoCode}`);
+        if (!promoCode) return;
+        const response = await fetch(baseAPI + `/api/promos/by-token/${promoCode.toUpperCase()}`);
         const data = await response.json();
         console.log('Promo Data:', data);
         setPromoFound(data ? data : null);
