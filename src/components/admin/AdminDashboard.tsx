@@ -8,6 +8,7 @@ import UserDetails from './UserDetails';
 import ProductsManager from './ProductsManager';
 import { CheckCircle, XCircle, LogOut } from 'lucide-react';
 import PotentialUsersList from './PotentialUsersList';
+import PromosManager from './PromosManager';
 const DashboardContainer = styled.div`
   min-height: 100vh;
   background: #1a1a1a;
@@ -283,6 +284,11 @@ const AdminDashboard = () => {
       key: '4',
       label: 'Potential Users',
       children: <PotentialUsersList setKeyValue={setKeyValue} />
+    },
+    {
+      key: '5',
+      label: 'Promos',
+      children: <PromosManager />,
     }
   ];
 

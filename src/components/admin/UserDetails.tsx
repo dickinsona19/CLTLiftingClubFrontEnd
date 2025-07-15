@@ -296,7 +296,16 @@ const UserDetails = (props) => {
       message.error('Failed to update referral code');
     }
   };
-
+  async function HandleCancelMembership(userId) {
+    try {
+      await fetch(`https://boss-lifting-club-api.onrender.com/cancel-subscriptions/${userId}`, {
+        method: 'POST',
+      });
+    } catch (error) {
+      console.error('Error canceling membership:', error);
+      message.error('Failed to cancel membership');
+    }
+  }
   const handleCancel = () => {
     setIsEditing(false);
     setEditedCode(selectedUser.referralCode);
@@ -362,6 +371,13 @@ const UserDetails = (props) => {
               onClick={()=> HandleSendAndroidLink(selectedUser.id)}
             >
               Send Android Download 
+            </Button>
+            <Button
+              type="primary"
+              icon={<X size={16} />}
+              onClick={()=> HandleCancelMembership(selectedUser.userStripeMemberId)}
+            >
+              Cancel Membership 
             </Button>
           </ActionsPanel>
         </Card>

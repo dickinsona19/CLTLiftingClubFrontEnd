@@ -16,6 +16,7 @@ import {
   BenefitsList,
   BenefitItem
 } from './styles';
+import { base } from 'framer-motion/client';
 
 const FormContainer = styled.div`
   min-height: 100vh;
@@ -177,7 +178,9 @@ export const SignUpForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validatedOtp, setValidatedOtp] = useState(false);
   const [referralCode, setReferralCode] = useState('')
+  const [promoCode, setPromoCode] = useState()
   const [referedUser, setReferredUser] = useState();
+  const [promoFound, setPromoFound] = useState()
 
   const baseAPI = 'https://boss-lifting-club-api.onrender.com'
 
@@ -287,6 +290,7 @@ export const SignUpForm: React.FC = () => {
             membershipName: 'Founder',
             referralId: referedUser?.id,
             lockedInRate: contract === 'Annual' ? '948.00' : '99.99',
+            promoToken: promoCode,
           }),
         });
         signupData = await signupResponse.json();
@@ -342,6 +346,21 @@ export const SignUpForm: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchPromo = async () => {
+      try {
+        const response = await fetch(baseAPI + `/api/promos/by-token/${promoCode}`);
+        const data = await response.json();
+        console.log('Promo Data:', data);
+        setPromoFound(data ? data : null);
+      } catch (error) {
+        console.error('Error fetching promo:', error);
+        setPromoFound( null);
+      }
+    };
+    fetchPromo();
+  }, [promoCode]);
   return (
     <FormContainer>
       <ContentWrapper>
@@ -377,13 +396,15 @@ export const SignUpForm: React.FC = () => {
                   <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
                 </PriceAmount>
               )}
-              {contract === "Founding" || contract === "Annual" && (
+              {(contract === "Founding" || contract === "Annual") && (
               <PriceDetail>
+                 {!promoFound && (
                
                                <div>
                                <span className="label">Activation Fee</span>
                                <span className="value"> $50</span>
                              </div>  
+                 )}
                
  
                 {contract === "Founding" && (
@@ -395,18 +416,41 @@ export const SignUpForm: React.FC = () => {
               </PriceDetail>
                )}
               <BenefitsList>
-                <BenefitItem>
+    
+                {contract === "Founding" ? (
+                  <>
+             <BenefitItem>
                   <Star size={16} />
                   <span>Add a family member for $50/month</span>
                 </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
-                  <span>Prorated Membership</span>
-                </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
-                  <span>Additional cost is made from the parent membership</span>
-                </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>No commitment required</span>
+                    </BenefitItem>
+                  </>
+                ) : contract === "Annual" ? (
+                  <>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Pay once a year</span>
+                    </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Discounted Rate</span>
+                    </BenefitItem>
+                  </>
+                ) : (
+                  <>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Prorated Membership</span>
+                    </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Additional cost is made from the parent membership</span>
+                    </BenefitItem>
+                  </>
+                )}
               </BenefitsList>
             </PriceCard>
           </BannerContainer>
@@ -453,15 +497,32 @@ export const SignUpForm: React.FC = () => {
                 <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
                   <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
                 </Form.Item>
-                {referedUser && (
+                {(referedUser && referralCode !== '') && (
                   <MaintenanceFeeNote>
                     {referedUser === "Not Found" ? (
                       <>Cannot Find reference</>
                     ) : (
                       <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
                     )}
+                    
                   </MaintenanceFeeNote>
                 )}
+                <Form.Item label="Promo Code" name="Promo Code" >
+                  <Input size="large" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} />
+                </Form.Item>
+                
+                  {promoCode && (
+                    !promoFound ? (
+                      <MaintenanceFeeNote>
+                      <>Cannot Find Promo</>
+                      </MaintenanceFeeNote>
+                    ) : (
+                      <MaintenanceFeeNote>
+                      <>Promo Found: Maintenance Fee waived ({promoFound.name})</>
+                      </MaintenanceFeeNote>
+                    )
+                  )}
+                
               </>
             )}
 
