@@ -167,7 +167,7 @@ const PromosManager = () => {
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
 
   // Mock API URL - replace with your actual API endpoint
-  const API_URL = 'http://localhost:8082/api/promos';
+  const API_URL = 'https://boss-lifting-club-api.onrender.com/api/promos';
 
   useEffect(() => {
     fetchBusinesses();
