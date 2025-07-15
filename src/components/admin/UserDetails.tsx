@@ -1,4 +1,4 @@
-import { Card, Descriptions, Space, Tag, Button, Input, message } from 'antd';
+import { Card, Descriptions, Space, Tag, Button, Input, message, Modal } from 'antd';
 import styled from 'styled-components';
 import { useAdminStore } from '../../contexts/AdminContext';
 import { Edit2, Save, X, Copy, Send, Users, CreditCard, Phone } from 'lucide-react';
@@ -7,6 +7,89 @@ import JointAccountModal from './JointAccountModal';
 import UpdateCardModal from './UpdateCardModal';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+
+const CancelConfirmModal = styled.div`
+  padding: 1rem 0;
+
+  p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .user-name {
+    color: white;
+    font-weight: 600;
+  }
+
+  .consequences-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  ul {
+    color: rgba(255, 255, 255, 0.7);
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    li {
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+    }
+  }
+
+  .warning-text {
+    color: #ff7875;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+`;
+
+const StyledModal = styled(Modal)`
+  .ant-modal-content {
+    background: #2a2a2a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .ant-modal-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px 24px 16px 24px;
+    border-radius: 20px 20px 0 0;
+
+    .ant-modal-title {
+      color: white;
+      font-size: 1.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+
+  .ant-modal-body {
+    padding: 0 24px 24px 24px;
+  }
+
+  .ant-modal-close {
+    color: rgba(255, 255, 255, 0.6);
+    
+    &:hover {
+      color: white;
+    }
+  }
+
+  .ant-modal-footer {
+    background: transparent;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px 24px 24px;
+    border-radius: 0 0 20px 20px;
+  }
+`;
 const DetailsContainer = styled.div`
   .ant-card {
     background: rgba(255, 255, 255, 0.05);
@@ -157,6 +240,8 @@ const UserDetails = (props) => {
   const [isJointAccountModalVisible, setIsJointAccountModalVisible] = useState(false);
   const [isUpdateCardModalVisible, setIsUpdateCardModalVisible] = useState(false);
   const [jointAccounts, setJointAccounts] = useState([]);
+  const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   useEffect(() => {
     if (selectedUser?.id) {
@@ -297,13 +382,24 @@ const UserDetails = (props) => {
     }
   };
   async function HandleCancelMembership(userId) {
+    setCancelLoading(true);
     try {
-      await fetch(`https://boss-lifting-club-api.onrender.com/cancel-subscriptions/${userId}`, {
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/cancel-subscriptions/${userId}`, {
         method: 'POST',
       });
+      
+      if (response.ok) {
+        message.success('Membership cancelled successfully');
+        // Optionally refresh user data or update UI
+        setIsCancelModalVisible(false);
+      } else {
+        throw new Error('Failed to cancel membership');
+      }
     } catch (error) {
       console.error('Error canceling membership:', error);
       message.error('Failed to cancel membership');
+    } finally {
+      setCancelLoading(false);
     }
   }
   const handleCancel = () => {
@@ -375,7 +471,8 @@ const UserDetails = (props) => {
             <Button
               type="primary"
               icon={<X size={16} />}
-              onClick={()=> HandleCancelMembership(selectedUser.userStripeMemberId)}
+              onClick={() => setIsCancelModalVisible(true)}
+              danger
             >
               Cancel Membership 
             </Button>
@@ -512,6 +609,56 @@ const UserDetails = (props) => {
         stripeCustomerId={selectedUser.userStripeMemberId}
       /></Elements>
 
+      <StyledModal
+        title="Cancel Membership"
+        open={isCancelModalVisible}
+        onOk={() => HandleCancelMembership(selectedUser.userStripeMemberId)}
+        onCancel={() => setIsCancelModalVisible(false)}
+        okText="Yes, Cancel Membership"
+        cancelText="Keep Membership"
+        okButtonProps={{ 
+          danger: true, 
+          loading: cancelLoading,
+          style: { 
+            background: 'rgba(255, 77, 79, 0.9)', 
+            borderColor: 'rgba(255, 77, 79, 0.5)',
+            color: 'white',
+            height: '45px',
+            fontSize: '1rem',
+            fontWeight: '600'
+          }
+        }}
+        cancelButtonProps={{
+          style: {
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+            color: 'white',
+            height: '45px',
+            fontSize: '1rem',
+            fontWeight: '600'
+          }
+        }}
+        centered
+      >
+        <CancelConfirmModal>
+          <p style={{ fontSize: '1.1rem' }}>
+            Are you sure you want to cancel the membership for{' '}
+            <span className="user-name">
+              {selectedUser.firstName} {selectedUser.lastName}
+            </span>?
+          </p>
+          <p className="consequences-title">
+            This action will:
+          </p>
+          <ul>
+            <li>Stop all future billing</li>
+            <li>Account will not cancel until right before the next billing cycle</li>
+          </ul>
+          <p className="warning-text">
+            This action cannot be undone. Unless you notify me (Andrew).
+          </p>
+        </CancelConfirmModal>
+      </StyledModal>
     </DetailsContainer>
   );
 };
