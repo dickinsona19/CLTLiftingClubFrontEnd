@@ -200,7 +200,7 @@ const AdminDashboard = () => {
     let tempBuffer = '';
   
     const handleKeyPress = (e: KeyboardEvent) => {
-  
+      tempBuffer = '';
       if (e.key === 'Enter') {
         const scannedCode = tempBuffer.trim();
         console.log('Scanned:', scannedCode);
