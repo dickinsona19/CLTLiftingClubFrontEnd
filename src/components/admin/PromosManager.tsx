@@ -272,7 +272,7 @@ const PromosManager = () => {
         render: (_, record: Business) => (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Users size={16} />
-            <span>{record.users.length}</span>
+            <span>{record.freePassCount}</span>
           </div>
         ),
       },
