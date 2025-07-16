@@ -9,6 +9,7 @@ import ProductsManager from './ProductsManager';
 import { CheckCircle, XCircle, LogOut } from 'lucide-react';
 import PotentialUsersList from './PotentialUsersList';
 import PromosManager from './PromosManager';
+import AnalyticsPage from './AnalyticsPage';
 const DashboardContainer = styled.div`
   min-height: 100vh;
   background: #1a1a1a;
@@ -199,7 +200,7 @@ const AdminDashboard = () => {
     let tempBuffer = '';
   
     const handleKeyPress = (e: KeyboardEvent) => {
-  
+      tempBuffer = '';
       if (e.key === 'Enter') {
         const scannedCode = tempBuffer.trim();
         console.log('Scanned:', scannedCode);
@@ -289,6 +290,11 @@ const AdminDashboard = () => {
       key: '5',
       label: 'Promos',
       children: <PromosManager />,
+    },
+    {
+      key: '6',
+      label: 'Analytics',
+      children: <AnalyticsPage />,
     }
   ];
 
