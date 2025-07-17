@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Card, Select, Statistic, Row, Col, DatePicker, Spin } from 'antd';
+import { Card, Select, Statistic, Row, Col, Spin, Table } from 'antd';
 import styled from 'styled-components';
-import { TrendingUp, DollarSign, Users, Calendar, BarChart3 } from 'lucide-react';
+import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -151,20 +151,41 @@ const FilterLabel = styled.span`
   font-weight: 500;
 `;
 
+const StyledTable = styled(Table)`
+  .ant-table {
+    background: transparent;
+    color: white;
+  }
+  .ant-table-thead > tr > th {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .ant-table-tbody > tr:hover > td {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
+
 const { Option } = Select;
 
 interface AnalyticsData {
   totalRevenue: number;
   userCount: number;
-  averageRevenue: number;
+  projectedRevenue: number;
   monthlyComparison: {
     thisMonth: number;
     lastMonth: number;
     percentageChange: number;
+    total: number;
   };
   chartData: {
     labels: string[];
-    thisMonth: number[];
+    thisMonthActual: number[];
+    thisMonthProjected: number[];
     lastMonth: number[];
   };
   userTypeBreakdown: {
@@ -181,15 +202,17 @@ const AnalyticsPage = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     totalRevenue: 0,
     userCount: 0,
-    averageRevenue: 0,
+    projectedRevenue: 0,
     monthlyComparison: {
       thisMonth: 0,
       lastMonth: 0,
       percentageChange: 0,
+      total: 0,
     },
     chartData: {
       labels: [],
-      thisMonth: [],
+      thisMonthActual: [],
+      thisMonthProjected: [],
       lastMonth: [],
     },
     userTypeBreakdown: {},
@@ -210,59 +233,27 @@ const AnalyticsPage = () => {
   const fetchAnalyticsData = async () => {
     setLoading(true);
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/analytics?userType=${selectedUserType}`);
-      
+      const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/analytics?userType=${selectedUserType}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          // Add authentication headers if required, e.g., Authorization: Bearer <token>
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
-        setAnalyticsData(data);
-      } else {
-        // Mock data for development
-        setAnalyticsData({
-          totalRevenue: selectedUserType === 'all' ? 45750 : 
-                       selectedUserType === 'monthly' ? 25000 :
-                       selectedUserType === 'annual' ? 15000 :
-                       selectedUserType === 'founder' ? 5000 : 750,
-          userCount: selectedUserType === 'all' ? 458 :
-                    selectedUserType === 'monthly' ? 250 :
-                    selectedUserType === 'annual' ? 150 :
-                    selectedUserType === 'founder' ? 50 : 8,
-          averageRevenue: selectedUserType === 'all' ? 99.89 :
-                         selectedUserType === 'monthly' ? 100 :
-                         selectedUserType === 'annual' ? 100 :
-                         selectedUserType === 'founder' ? 100 : 93.75,
-          monthlyComparison: {
-            thisMonth: selectedUserType === 'all' ? 45750 : 
-                      selectedUserType === 'monthly' ? 25000 :
-                      selectedUserType === 'annual' ? 15000 :
-                      selectedUserType === 'founder' ? 5000 : 750,
-            lastMonth: selectedUserType === 'all' ? 42300 :
-                      selectedUserType === 'monthly' ? 23500 :
-                      selectedUserType === 'annual' ? 14200 :
-                      selectedUserType === 'founder' ? 4100 : 500,
-            percentageChange: selectedUserType === 'all' ? 8.2 :
-                             selectedUserType === 'monthly' ? 6.4 :
-                             selectedUserType === 'annual' ? 5.6 :
-                             selectedUserType === 'founder' ? 22.0 : 50.0,
-          },
+        const formattedData: AnalyticsData = {
+          ...data,
           chartData: {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-            thisMonth: selectedUserType === 'all' ? [10500, 11200, 12000, 12050] :
-                      selectedUserType === 'monthly' ? [6000, 6200, 6400, 6400] :
-                      selectedUserType === 'annual' ? [3500, 3800, 3900, 3800] :
-                      selectedUserType === 'founder' ? [1000, 1200, 1400, 1400] : [150, 200, 200, 200],
-            lastMonth: selectedUserType === 'all' ? [9800, 10500, 11000, 11000] :
-                      selectedUserType === 'monthly' ? [5500, 5800, 6000, 6200] :
-                      selectedUserType === 'annual' ? [3200, 3500, 3700, 3800] :
-                      selectedUserType === 'founder' ? [900, 1000, 1100, 1100] : [100, 125, 150, 125],
+            labels: data.chartData.labels,
+            thisMonthActual: data.chartData.thisMonthActual.map((value: number) => Number(value)),
+            thisMonthProjected: data.chartData.thisMonthProjected.map((value: number) => Number(value)),
+            lastMonth: data.chartData.lastMonth.map((value: number) => Number(value)),
           },
-          userTypeBreakdown: {
-            monthly: { count: 250, revenue: 25000 },
-            annual: { count: 150, revenue: 15000 },
-            founder: { count: 50, revenue: 5000 },
-            misc: { count: 8, revenue: 750 },
-          },
-        });
+        };
+        setAnalyticsData(formattedData);
+      } else {
+        console.error('Failed to fetch analytics data:', response.statusText);
       }
     } catch (error) {
       console.error('Error fetching analytics data:', error);
@@ -311,11 +302,21 @@ const AnalyticsPage = () => {
     labels: analyticsData.chartData.labels,
     datasets: [
       {
-        label: 'This Month',
-        data: analyticsData.chartData.thisMonth,
+        label: 'This Month (Actual)',
+        data: analyticsData.chartData.thisMonthActual,
         borderColor: '#3B82F6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         tension: 0.4,
+        fill: true,
+      },
+      {
+        label: 'This Month (Projected)',
+        data: analyticsData.chartData.thisMonthProjected,
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderDash: [5, 5],
+        tension: 0.4,
+        fill: true,
       },
       {
         label: 'Last Month',
@@ -323,6 +324,7 @@ const AnalyticsPage = () => {
         borderColor: 'rgba(255, 255, 255, 0.5)',
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         tension: 0.4,
+        fill: true,
       },
     ],
   };
@@ -331,7 +333,7 @@ const AnalyticsPage = () => {
     labels: Object.keys(analyticsData.userTypeBreakdown),
     datasets: [
       {
-        label: 'Revenue ($)',
+        label: 'Lifetime Revenue ($)',
         data: Object.values(analyticsData.userTypeBreakdown).map(item => item.revenue),
         backgroundColor: [
           'rgba(59, 130, 246, 0.8)',
@@ -360,6 +362,32 @@ const AnalyticsPage = () => {
       },
     },
   };
+
+  const tableColumns = [
+    {
+      title: 'User Type',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
+      title: 'Active Subscriptions',
+      dataIndex: 'count',
+      key: 'count',
+    },
+    {
+      title: 'Lifetime Revenue ($)',
+      dataIndex: 'revenue',
+      key: 'revenue',
+      render: (value: number) => `$${Number(value).toLocaleString()}`,
+    },
+  ];
+
+  const tableData = Object.entries(analyticsData.userTypeBreakdown).map(([type, data]) => ({
+    key: type,
+    type: type.charAt(0).toUpperCase() + type.slice(1),
+    count: data.count,
+    revenue: data.revenue,
+  }));
 
   return (
     <Container>
@@ -393,18 +421,17 @@ const AnalyticsPage = () => {
           <MetricsGrid>
             <StyledCard>
               <Statistic
-                title="Total Revenue This Month"
+                title="Actual Revenue This Month"
                 value={analyticsData.totalRevenue}
                 precision={2}
                 prefix={<DollarSign size={20} />}
-                suffix=""
                 formatter={(value) => `$${Number(value).toLocaleString()}`}
               />
             </StyledCard>
 
             <StyledCard>
               <Statistic
-                title="Active Users"
+                title="Active Subscriptions"
                 value={analyticsData.userCount}
                 prefix={<Users size={20} />}
               />
@@ -412,11 +439,11 @@ const AnalyticsPage = () => {
 
             <StyledCard>
               <Statistic
-                title="Average Revenue per User"
-                value={analyticsData.averageRevenue}
+                title="Projected Revenue (Rest of Month)"
+                value={analyticsData.projectedRevenue}
                 precision={2}
                 prefix={<DollarSign size={20} />}
-                formatter={(value) => `$${Number(value).toFixed(2)}`}
+                formatter={(value) => `$${Number(value).toLocaleString()}`}
               />
             </StyledCard>
 
@@ -449,40 +476,53 @@ const AnalyticsPage = () => {
               <ChartContainer>
                 <ChartTitle>
                   <BarChart3 size={20} />
-                  Revenue by User Type
+                  Lifetime Revenue by User Type
                 </ChartTitle>
                 <Bar data={barChartData} options={barChartOptions} />
               </ChartContainer>
             </Col>
           </Row>
 
+          <StyledCard title="User Type Breakdown">
+            <StyledTable
+              columns={tableColumns}
+              dataSource={tableData}
+              pagination={false}
+            />
+          </StyledCard>
+
           <StyledCard title="Monthly Comparison Details">
             <Row gutter={[16, 16]}>
-              <Col xs={24} sm={8}>
+              <Col xs={24} sm={6}>
                 <Statistic
-                  title="This Month"
+                  title="This Month (Actual)"
                   value={analyticsData.monthlyComparison.thisMonth}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
                 />
               </Col>
-              <Col xs={24} sm={8}>
+              <Col xs={24} sm={6}>
+                <Statistic
+                  title="This Month (Projected)"
+                  value={analyticsData.projectedRevenue}
+                  prefix={<DollarSign size={16} />}
+                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+                />
+              </Col>
+              <Col xs={24} sm={6}>
+                <Statistic
+                  title="This Month (Total)"
+                  value={analyticsData.monthlyComparison.total}
+                  prefix={<DollarSign size={16} />}
+                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+                />
+              </Col>
+              <Col xs={24} sm={6}>
                 <Statistic
                   title="Last Month"
                   value={analyticsData.monthlyComparison.lastMonth}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
-                />
-              </Col>
-              <Col xs={24} sm={8}>
-                <Statistic
-                  title="Difference"
-                  value={analyticsData.monthlyComparison.thisMonth - analyticsData.monthlyComparison.lastMonth}
-                  prefix={<DollarSign size={16} />}
-                  formatter={(value) => `$${Number(value).toLocaleString()}`}
-                  valueStyle={{ 
-                    color: (analyticsData.monthlyComparison.thisMonth - analyticsData.monthlyComparison.lastMonth) >= 0 ? '#10B981' : '#EF4444' 
-                  }}
                 />
               </Col>
             </Row>
