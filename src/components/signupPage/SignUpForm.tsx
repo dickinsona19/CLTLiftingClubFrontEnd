@@ -519,7 +519,7 @@ export const SignUpForm: React.FC = () => {
                       </MaintenanceFeeNote>
                     ) : (
                       <MaintenanceFeeNote>
-                      <>Promo Found: Maintenance Fee waived ({promoFound.name})</>
+                      <>Promo Found: Activation Fee waived ({promoFound.name})</>
                       </MaintenanceFeeNote>
                     )
                   )}
