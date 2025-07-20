@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, Space, Tag, Modal, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
@@ -195,44 +195,90 @@ const AdminDashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [isImagePreviewVisible, setIsImagePreviewVisible] = useState(false);
   const [totalActiveUsers, setTotalActiveUsers] = useState(0);
-  
+  const bufferRef = useRef(''); // Persist buffer across renders
+  const lastKeyTimeRef = useRef(Date.now()); // Track time between keypresses
+  const scanTimeoutRef = useRef(null); // Timeout for scan completion
+    
   useEffect(() => {
-    let tempBuffer = '';
-  
     const handleKeyPress = (e: KeyboardEvent) => {
-      tempBuffer = '';
+      const currentTime = Date.now();
+      const timeSinceLastKey = currentTime - lastKeyTimeRef.current;
+
+      // Reset buffer if too much time has passed (e.g., new scan)
+      if (timeSinceLastKey > 100) {
+        bufferRef.current = '';
+      }
+      lastKeyTimeRef.current = currentTime;
+
+      // Clear any existing timeout
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+      }
+
       if (e.key === 'Enter') {
-        const scannedCode = tempBuffer.trim();
-        console.log('Scanned:', scannedCode);
-  
+        const scannedCode = bufferRef.current.trim();
         if (scannedCode) {
+          console.log('Scanned:', scannedCode);
           fetch(`https://boss-lifting-club-api.onrender.com/users/barcode/${scannedCode}`)
             .then(res => {
-              console.log(res);
+              if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+              }
               return res.json();
             })
             .then(data => {
               if (data) {
-                console.log(data)
-                setSelectedUser(data)
+                console.log('Fetched user:', data);
+                setSelectedUser(data);
+              } else {
+                console.error('No user data returned');
+              }
+            })
+            .catch(err => {
+              console.error('Error fetching scanned user:', err);
+              // Optionally notify user of error (e.g., show a toast)
+            });
+        }
+        bufferRef.current = ''; // Clear buffer after processing
+      } else if (/^[a-zA-Z0-9\-\/]$/.test(e.key)) {
+        // Allow alphanumeric and common barcode chars (-, /)
+        bufferRef.current += e.key.toUpperCase();
+      }
+
+      // Set a timeout to process scan if no Enter key (scanner may not send Enter)
+      scanTimeoutRef.current = setTimeout(() => {
+        const scannedCode = bufferRef.current.trim();
+        if (scannedCode) {
+          console.log('Timeout scan:', scannedCode);
+          fetch(`https://boss-lifting-club-api.onrender.com/users/barcode/${scannedCode}`)
+            .then(res => {
+              if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+              }
+              return res.json();
+            })
+            .then(data => {
+              if (data) {
+                console.log('Fetched user:', data);
+                setSelectedUser(data);
               }
             })
             .catch(err => {
               console.error('Error fetching scanned user:', err);
             });
+          bufferRef.current = ''; // Clear buffer after processing
         }
-  
-        tempBuffer = '';  // Clear buffer after submit.
-      } else if (/^[a-zA-Z0-9]$/.test(e.key)) {
-        tempBuffer += e.key.toUpperCase();  // Add only valid chars, uppercase.
-      }
+      }, 150); // Adjust timeout based on scanner speed
     };
-  
+
     window.addEventListener('keydown', handleKeyPress);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [setSelectedUser]);
   
   useEffect(() => {
     if (!user) {
