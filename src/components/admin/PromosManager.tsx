@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Tag, Collapse } from 'antd';
-import { PlusCircle, Trash2, Building, Users, Gift, Eye } from 'lucide-react';
+import { PlusCircle, Trash2, Building, Users, Gift, Eye, QrCode } from 'lucide-react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -214,6 +214,23 @@ const PromosManager = () => {
       message.error('Failed to add business');
     }
   };
+  const handleQRCode = async (promoCode: string) => {
+    try {
+      const response = await fetch(`${API_URL}/api/promos/generate-qr?comingFrom=${promoCode}`, {
+        method: 'GET',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to generate QR code');
+      }
+      const data = await response.json();
+      console.log('QR code URL:', data.url);
+      // Optionally open the URL in a new tab
+      window.open(data.url, '_blank');
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      message.error('Failed to generate QR code');
+    }
+  };
 
   const handleDeleteBusiness = async (businessId: string) => {
     try {
@@ -291,6 +308,16 @@ const PromosManager = () => {
           >
             {expandedRows.includes(record.id) ? 'Hide' : 'View'} Users
           </Button>
+          <Button
+            icon={<QrCode size={16} />}
+            onClick={(e) => {
+              handleQRCode(record.promoCode);
+            }}
+
+            size="small"
+          >
+            Get Qr Code
+          </Button>
           <Popconfirm
             title="Are you sure you want to delete this business?"
             onConfirm={(e) => {
@@ -306,6 +333,8 @@ const PromosManager = () => {
               onClick={(e) => e.stopPropagation()}
             />
           </Popconfirm>
+
+         
         </Space>
       ),
     },
