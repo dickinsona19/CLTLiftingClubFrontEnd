@@ -216,7 +216,7 @@ const PromosManager = () => {
   };
   const handleQRCode = async (promoCode: string) => {
     try {
-      const response = await fetch(`${API_URL}/api/promos/generate-qr?comingFrom=${promoCode}`, {
+      const response = await fetch(`${API_URL}/generate-qr?comingFrom=${promoCode}`, {
         method: 'GET',
       });
       if (!response.ok) {
