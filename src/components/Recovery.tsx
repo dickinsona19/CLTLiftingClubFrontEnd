@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Waves, Snowflake, Wind, Leaf, Timer, Heart,Sun } from 'lucide-react';
-import ColdPlunge from '../assets/ColdPlunge.jpg'
+import { Waves, Wind, Leaf, Timer, Heart, Sun } from 'lucide-react';
+import ColdPlunge from '../assets/SaunaBasic.jpg'
+
 const Section = styled.section`
   padding: 8rem 2rem;
   background-image: url(${ColdPlunge});
@@ -77,7 +78,9 @@ const Grid = styled.div`
   margin-bottom: 4rem;
   
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto 4rem;
   }
 `;
 
@@ -88,6 +91,7 @@ const Feature = styled(motion.div)`
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  text-align: center;
 
   &:hover {
     transform: translateY(-5px);
@@ -154,7 +158,7 @@ const BenefitItem = styled.li`
   }
 `;
 
-const Stats = styled.div`
+const RecoveryMethods = styled.div`
   display: grid;
   gap: 2rem;
   margin-top: 4rem;
@@ -164,7 +168,7 @@ const Stats = styled.div`
   }
 `;
 
-const StatItem = styled(motion.div)`
+const MethodCard = styled(motion.div)`
   text-align: center;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.03);
@@ -179,19 +183,32 @@ const StatItem = styled(motion.div)`
   }
 `;
 
-const StatNumber = styled.div`
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 800;
+const MethodIcon = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
   color: white;
-  margin-bottom: 1rem;
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
-const StatLabel = styled.div`
-  color: rgba(255, 255, 255, 0.9);
-  font-size: clamp(0.9rem, 2.5vw, 1.125rem);
+const MethodTitle = styled.h4`
+  font-size: clamp(1.125rem, 3vw, 1.25rem);
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+`;
+
+const MethodDescription = styled.p`
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-size: clamp(0.875rem, 2vw, 1rem);
 `;
 
 export const Recovery = () => {
@@ -203,7 +220,7 @@ export const Recovery = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Elite Recovery Zone
+          Sauna Suite
         </Title>
         <Subtitle
           initial={{ opacity: 0, y: 20 }}
@@ -211,95 +228,91 @@ export const Recovery = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
         >
-          Accelerate your recovery and optimize your performance with our state-of-the-art recovery facilities.
-          Designed for athletes who demand the best in their recovery protocol.
+          Discover the power of our premium sauna experience.
+          Designed for athletes who understand that recovery is just as important as training.
         </Subtitle>
+        
         <Grid>
           <Feature
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
             <IconWrapper>
               <Waves size={48} />
             </IconWrapper>
-            <FeatureTitle>Sauna Experience</FeatureTitle>
+            <FeatureTitle>Premium Sauna Experience</FeatureTitle>
             <Description>
-              Relax and unwind in our traditional sauna, perfect for soothing muscles and calming the mind.
+              Relax and unwind in our traditional sauna, perfect for soothing muscles, improving circulation, 
+              and promoting deep relaxation after intense training sessions.
             </Description>
             <BenefitsList>
               <BenefitItem>
                 <Sun size={20} />
-                Warm and inviting sessions for relaxation
+                Warm, therapeutic sessions for muscle relaxation
               </BenefitItem>
               <BenefitItem>
                 <Heart size={20} />
-                Improved circulation and detoxification
+                Enhanced circulation and cardiovascular health
               </BenefitItem>
               <BenefitItem>
                 <Wind size={20} />
-                Refreshed and rejuvenated skin
-              </BenefitItem>
-            </BenefitsList>
-          </Feature>
-          <Feature
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            <IconWrapper>
-              <Snowflake size={48} />
-            </IconWrapper>
-            <FeatureTitle>Elite Cold Plunge</FeatureTitle>
-            <Description>
-              Immerse yourself in our professional-grade cold plunge pools.
-              Precisely temperature-controlled for optimal recovery benefits.
-            </Description>
-            <BenefitsList>
-              <BenefitItem>
-                <Timer size={20} />
-                3-10 minute immersion protocols
+                Improved skin health and detoxification
               </BenefitItem>
               <BenefitItem>
                 <Leaf size={20} />
-                Reduced inflammation and soreness
-              </BenefitItem>
-              <BenefitItem>
-                <Heart size={20} />
-                Enhanced mental clarity and focus
+                Stress reduction and mental clarity
               </BenefitItem>
             </BenefitsList>
           </Feature>
         </Grid>
-        {/* <Stats>
-          <StatItem
+
+        <RecoveryMethods>
+          <MethodCard
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
           >
-            <StatNumber>140°F</StatNumber>
-            <StatLabel>Peak Sauna Temperature</StatLabel>
-          </StatItem>
-          <StatItem
+            <MethodIcon>
+              <Timer size={32} />
+            </MethodIcon>
+            <MethodTitle>Active Recovery</MethodTitle>
+            <MethodDescription>
+              Light movement and stretching protocols to enhance blood flow and reduce muscle stiffness.
+            </MethodDescription>
+          </MethodCard>
+
+          <MethodCard
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
           >
-            <StatNumber>38°F</StatNumber>
-            <StatLabel>Cold Plunge Temperature</StatLabel>
-          </StatItem>
-          <StatItem
+            <MethodIcon>
+              <Heart size={32} />
+            </MethodIcon>
+            <MethodTitle>Heat Therapy</MethodTitle>
+            <MethodDescription>
+              Sauna sessions to promote muscle relaxation, improve flexibility, and enhance recovery.
+            </MethodDescription>
+          </MethodCard>
+
+          <MethodCard
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
           >
-            <StatNumber>24/7</StatNumber>
-            <StatLabel>Recovery Access</StatLabel>
-          </StatItem>
-        </Stats> */}
+            <MethodIcon>
+              <Leaf size={32} />
+            </MethodIcon>
+            <MethodTitle>Mindful Recovery</MethodTitle>
+            <MethodDescription>
+              Quiet spaces for meditation, breathing exercises, and mental recovery techniques.
+            </MethodDescription>
+          </MethodCard>
+        </RecoveryMethods>
       </Container>
     </Section>
   );

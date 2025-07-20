@@ -16,6 +16,7 @@ import {
   BenefitsList,
   BenefitItem
 } from './styles';
+import { base } from 'framer-motion/client';
 
 const FormContainer = styled.div`
   min-height: 100vh;
@@ -37,6 +38,7 @@ const ContentWrapper = styled.div`
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  margin-top: 4em;
   @media (max-width: 1200px) {
     flex-direction: column;
     gap: 2rem;
@@ -163,6 +165,7 @@ const stripePromise = loadStripe("pk_live_51R0485GHcVHSTvgIIklSPgIuBQRKFLnkzkW3X
 export const SignUpForm: React.FC = () => {
   const [searchParams] = useSearchParams();
   const contract = searchParams.get('contract');
+  const familyUserId = searchParams.get('userId');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [form] = Form.useForm();
@@ -175,7 +178,9 @@ export const SignUpForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [validatedOtp, setValidatedOtp] = useState(false);
   const [referralCode, setReferralCode] = useState('')
+  const [promoCode, setPromoCode] = useState()
   const [referedUser, setReferredUser] = useState();
+  const [promoFound, setPromoFound] = useState()
 
   const baseAPI = 'https://boss-lifting-club-api.onrender.com'
 
@@ -248,9 +253,13 @@ export const SignUpForm: React.FC = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
+  
     try {
+
+  
+      // Handle OTP verification if not already validated
       if (!otpSent) {
-        showModal();
+        showModal(); // Assume this triggers OTP sending
         return;
       }
       if (!validatedOtp) {
@@ -260,46 +269,99 @@ export const SignUpForm: React.FC = () => {
           body: JSON.stringify({ phoneNumber: `+1 ${phoneNumber}`, otp: otpValue }),
         });
         const verifyData = await verifyResponse.json();
-        if (!verifyData.isValid) {
-          message.error('Invalid OTP');
+        if (!verifyResponse.ok || !verifyData.isValid) {
+          message.error(verifyData.error || 'Invalid OTP');
           setValidatedOtp(false);
           return;
         }
+        setValidatedOtp(true); // Update state on success
       }
-
-      const signupResponse = await fetch(baseAPI + '/signupWithCard', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          phoneNumber,
-          password,
-          membershipName: "Founder",
-          referralId: referedUser?.id,
-          lockedInRate: contract === "Annual" ? "948.00" : "99.99"
-        }),
-      });
-      const signupData = await signupResponse.json();
-
-      if (!signupResponse.ok) {
-        message.error(signupData.error || 'Failed to sign up');
+  
+      let signupData;
+      if (contract !== 'Family') {
+        const signupResponse = await fetch(baseAPI + '/signupWithCard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            phoneNumber,
+            password,
+            membershipName: 'Founder',
+            referralId: referedUser?.id,
+            lockedInRate: contract === 'Annual' ? '948.00' : '99.99',
+            promoToken: promoCode,
+          }),
+        });
+        signupData = await signupResponse.json();
+        if (!signupResponse.ok) {
+          message.error(signupData.error || 'Failed to sign up');
+          return;
+        }
+      } else {
+        if (!familyUserId) {
+          message.error('Family user ID is required');
+          return;
+        }
+        const familySignupResponse = await fetch(baseAPI + `/${familyUserId}/add-child`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            phoneNumber,
+            password,
+          }),
+        });
+        const familySignupData = await familySignupResponse.json();
+        if (!familySignupResponse.ok) {
+          message.error(familySignupData.error || 'Failed to add child');
+          return;
+        }
+        console.log('Family signup success:', familySignupData);
+        window.location.href = '/success'; // Redirect after success
+        return; // Exit early for Family case
+      }
+  
+      // Stripe checkout for non-Family contracts
+      const { sessionId } = signupData;
+      if (!sessionId) {
+        message.error('Payment session not created');
         return;
       }
-
-      const { sessionId } = signupData;
       const stripe = await stripePromise;
-      const { error } = await stripe!.redirectToCheckout({ sessionId });
+      if (!stripe) {
+        message.error('Stripe initialization failed');
+        return;
+      }
+      const { error } = await stripe.redirectToCheckout({ sessionId });
       if (error) {
         message.error(`Card setup failed: ${error.message}`);
+        return;
       }
-    } catch {
+    } catch (error) {
+      console.error('Signup error:', error); // Log for debugging
       message.error('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    const fetchPromo = async () => {
+      try {
+        if (!promoCode) return;
+        const response = await fetch(baseAPI + `/api/promos/by-token/${promoCode.toUpperCase()}`);
+        const data = await response.json();
+        console.log('Promo Data:', data);
+        setPromoFound(data ? data : null);
+      } catch (error) {
+        console.error('Error fetching promo:', error);
+        setPromoFound( null);
+      }
+    };
+    fetchPromo();
+  }, [promoCode]);
   return (
     <FormContainer>
       <ContentWrapper>
@@ -317,22 +379,35 @@ export const SignUpForm: React.FC = () => {
             >
               <FounderTag>
                 <Star size={14} />
-                <span>{contract === "Founding" ? "Founding Member" : (contract === "Annual" ? "Annual" : "")}</span>
+                <span>{contract === "Founding" ? "Monthly Membership" : (contract === "Annual" ? "Annual" : "Family Membership")}</span>
               </FounderTag>
               
               <PriceHeading>CLT Lifting Club</PriceHeading>
               
-              <PriceAmount>
-                <span className="currency">$</span>
-                <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
-                <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
-              </PriceAmount>
-              
+              {contract === "Family" ? (
+                <PriceAmount>
+                  <span className="currency">$</span>
+                  <span className="amount">50</span>
+                  <span className="period">/month</span>
+                </PriceAmount>
+              ) : (
+                <PriceAmount>
+                  <span className="currency">$</span>
+                  <span className="amount">{contract === "Founding" ? "99" : (contract === "Annual" ? "948" : "")}</span>
+                  <span className="period">{contract === "Founding" ? "/month" : (contract === "Annual" ? "/year" : "")}</span>
+                </PriceAmount>
+              )}
+              {(contract === "Founding" || contract === "Annual") && (
               <PriceDetail>
-                <div>
-                  <span className="label">Activation Fee</span>
-                  <span className="value"> $50</span>
-                </div>
+                 {!promoFound && (
+               
+                               <div>
+                               <span className="label">Activation Fee</span>
+                               <span className="value"> $50</span>
+                             </div>  
+                 )}
+               
+ 
                 {contract === "Founding" && (
                   <div>
                     <span className="label">Tax (5%)</span>
@@ -340,24 +415,43 @@ export const SignUpForm: React.FC = () => {
                   </div>
                 )}
               </PriceDetail>
-              
+               )}
               <BenefitsList>
-                <BenefitItem>
+    
+                {contract === "Founding" ? (
+                  <>
+             <BenefitItem>
                   <Star size={16} />
-                  <span>Operating Hours: 5AM - 9PM</span>
+                  <span>Add a family member for $50/month</span>
                 </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
-                  <span>Premium Equipment</span>
-                </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
-                  <span>Founder Status Benefits</span>
-                </BenefitItem>
-                <BenefitItem>
-                  <Star size={16} />
-                  <span>Community Events</span>
-                </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>No commitment required</span>
+                    </BenefitItem>
+                  </>
+                ) : contract === "Annual" ? (
+                  <>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Pay once a year</span>
+                    </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Discounted Rate</span>
+                    </BenefitItem>
+                  </>
+                ) : (
+                  <>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Prorated Membership</span>
+                    </BenefitItem>
+                    <BenefitItem>
+                      <Star size={16} />
+                      <span>Additional cost is made from the parent membership</span>
+                    </BenefitItem>
+                  </>
+                )}
               </BenefitsList>
             </PriceCard>
           </BannerContainer>
@@ -366,7 +460,7 @@ export const SignUpForm: React.FC = () => {
         <FormWrapper>
           <FormHeader>
             <FormTitle>Join CLT Lifting Club</FormTitle>
-            <FormSubtitle>Become a founding member today</FormSubtitle>
+            <FormSubtitle>Become a member today</FormSubtitle>
           </FormHeader>
 
           <StyledForm form={form} layout="vertical" onFinish={handleSubmit}>
@@ -399,21 +493,42 @@ export const SignUpForm: React.FC = () => {
               <Input.Password size="large" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </Form.Item>
 
-            <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
-              <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
-            </Form.Item>
-            {referedUser &&
-            <MaintenanceFeeNote>
-              {referedUser === "Not Found" ? (
-                <>Cannot Find reference</>
-              ) : (
-                <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
-              )}
-            </MaintenanceFeeNote> 
-            }
+            {contract !== "Family" && (
+              <>
+                <Form.Item label="Referral Code" name="Referral Code" rules={[{ min: 10, message: 'Referral Code must be 10 characters' }]}>
+                  <Input size="large" value={referralCode} onChange={(e) => setReferralCode(e.target.value)} />
+                </Form.Item>
+                {(referedUser && referralCode !== '') && (
+                  <MaintenanceFeeNote>
+                    {referedUser === "Not Found" ? (
+                      <>Cannot Find reference</>
+                    ) : (
+                      <>Referred By: {referedUser?.firstName} {referedUser?.lastName}</>
+                    )}
+                    
+                  </MaintenanceFeeNote>
+                )}
+                <Form.Item label="Promo Code" name="Promo Code" >
+                  <Input size="large" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} />
+                </Form.Item>
+                
+                  {promoCode && (
+                    !promoFound ? (
+                      <MaintenanceFeeNote>
+                      <>Cannot Find Promo</>
+                      </MaintenanceFeeNote>
+                    ) : (
+                      <MaintenanceFeeNote>
+                      <>Promo Found: Activation Fee waived ({promoFound.name})</>
+                      </MaintenanceFeeNote>
+                    )
+                  )}
+                
+              </>
+            )}
 
             <MaintenanceFeeNote>
-              Note: Every membership includes a bi-annual maintenance fee of $59.99, conveniently billed every six months following account creation.
+              Note: {contract === 'Family' ? 'For family memberships, only the parent account pays the' : 'Every membership includes a'} bi-annual maintenance fee of $59.99.
             </MaintenanceFeeNote>
 
             <Form.Item name="termsAndConditions" valuePropName="checked" rules={[{ required: true, message: 'Please accept the terms and conditions' }]}>

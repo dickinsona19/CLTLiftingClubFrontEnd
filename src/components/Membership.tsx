@@ -1,28 +1,29 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Shield, Dumbbell, Clock, Calendar, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom'; // Added import for Link
+import { Link } from 'react-router-dom';
 import { Flex, Radio, RadioChangeEvent } from 'antd';
 import { useState } from 'react';
-import BigWeight from '../assets/BigWeight.jpg'
+import BigWeight from '../assets/attachments.jpg'
+
 const Section = styled.section`
   min-height: 100vh;
   padding: 8rem 2rem;
-  background: url(${BigWeight}) no-repeat center/cover; /* No fixed by default */
-  background-position: 50% 75%;
+  background: url(${BigWeight}) no-repeat center/cover;
+  background-position: 50% 60%;
   position: relative;
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the plan card */
+  justify-content: center;
 
   @media (min-width: 769px) {
-    background-attachment: fixed; /* Fixed only on desktop */
+    background-attachment: fixed;
   }
 
   @media (max-width: 768px) {
-    padding: 4rem 1rem; /* Smaller padding on mobile */
-    background-position: center; /* Optional: adjust if 75% looks off */
+    padding: 4rem 1rem;
+    background-position: center;
   }
 
   &:before {
@@ -32,12 +33,12 @@ const Section = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
-
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
   }
 `;
 
 const Container = styled.div`
+  margin-top: 4em;
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
@@ -50,6 +51,10 @@ const Grid = styled.div`
   
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -76,6 +81,68 @@ const Subtitle = styled(motion.p)`
   letter-spacing: 1px;
 `;
 
+// Mobile Tab Navigation
+const MobileTabContainer = styled.div`
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    display: block;
+    margin-bottom: 2rem;
+  }
+`;
+
+const TabNavigation = styled.div`
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+`;
+
+const TabButton = styled.button<{ active: boolean }>`
+  flex: 1;
+  padding: 1rem;
+  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: ${props => props.active ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid transparent'};
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+`;
+
+const MobileCardContainer = styled.div`
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    display: block;
+  }
+`;
+
+const DesktopGrid = styled(Grid)`
+  @media (max-width: 767px) {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    display: grid;
+  }
+`;
+
 const PlanCard = styled(motion.div)`
   background: rgba(255, 255, 255, 0.03);
   border-radius: 20px;
@@ -85,7 +152,7 @@ const PlanCard = styled(motion.div)`
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
-  text-align: center; /* Center the text */
+  text-align: center;
 
   &:hover {
     transform: translateY(-10px);
@@ -125,6 +192,41 @@ const ActivationFee = styled.div`
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
 `;
+
+const PaymentNote = styled.div`
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+`;
+
+const TotalAmount = styled.div`
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+`;
+
 const Features = styled.ul`
   list-style: none;
   padding: 0;
@@ -192,13 +294,78 @@ const MaintenanceFee = styled.div`
   }
 `;
 
-
-
 export const Membership = () => {
- const [contractMonthTime, setContractMonthTime] = useState("12 Month")
-const onChange = (e: RadioChangeEvent) => {
-  setContractMonthTime(e.target.value);
-};
+  const [activeTab, setActiveTab] = useState<'founding' | 'annual'>('founding');
+
+  const foundingMemberCard = (
+    <PlanCard
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.4 }}
+    >
+      <PlanName>Monthly Membership</PlanName>
+      <Price>$99 <span>/ month</span></Price>
+      <ActivationFee>$50 Activation Fee</ActivationFee>
+      <Features>
+        <Feature>
+          <Clock size={20} />
+          Limited Time Offer
+        </Feature>
+        <Feature>
+          <Dumbbell size={20} />
+          All Equipment Access
+        </Feature>
+        <Feature>
+          <Shield size={20} />
+          Full Recovery Zone
+        </Feature>
+      </Features>
+      <Link to="/signup?contract=Founding" style={{ textDecoration: 'none' }}>
+        <Button>
+          Sign up
+        </Button>
+      </Link>
+    </PlanCard>
+  );
+
+  const annualCard = (
+    <PlanCard
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.5 }}
+    >
+      <PlanName>Annual</PlanName>
+      <Price>$79 <span>/ month</span></Price>
+      <PaymentNote>💳 Paid in Full Upfront</PaymentNote>
+      <TotalAmount>
+        <span className="label">Total Amount Due Today:</span>
+        <span className="amount">$998</span>
+      </TotalAmount>
+      <ActivationFee>$50 Activation Fee + $948 Annual Fee</ActivationFee>
+      <Features>
+        <Feature>
+          <Calendar size={20} />
+          12-Month Commitment
+        </Feature>
+        <Feature>
+          <Dumbbell size={20} />
+          All Equipment Access
+        </Feature>
+        <Feature>
+          <Shield size={20} />
+          Full Recovery Zone
+        </Feature>
+      </Features>
+      <Link to="/signup?contract=Annual" style={{ textDecoration: 'none' }}>
+        <Button>
+          Sign up
+        </Button>
+      </Link>
+    </PlanCard>
+  );
+
   return (
     <Section>
       <Container>
@@ -218,168 +385,38 @@ const onChange = (e: RadioChangeEvent) => {
           Select the membership that matches your commitment to excellence. 
           Join our community of dedicated athletes and transform your potential into power.
         </Subtitle>
-        <Grid>
-          {/* <PlanCard
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <PlanName>{contractMonthTime}</PlanName>
-            <Price>${contractMonthTime === "No Contract" ? 109 : contractMonthTime === "6 Month" ? 99 : 89} <span>/ month</span></Price>
-            <div
-  style={{
-    width: '100%',
-    marginBottom: '1em',
-    padding: '.5rem',
-    background: 'transparent',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    borderRadius: '8px',
-    fontWeight: 600,
-    fontSize: '1.125rem',
-    cursor: 'pointer',
-    textTransform: 'uppercase',
-    letterSpacing: '2px',
-    transition: 'all 0.3s ease',
-    marginTop: 'auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 1,
-  }}
->
-  <Radio.Group
-    onChange={onChange}
-    value={contractMonthTime}
-    options={[
-      {
-        value: "No Contract",
-        label: (
-          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
-            No Contract
-          </Flex>
-        ),
-      },
-      {
-        value: "6 Month",
-        label: (
-          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
-            6 Month
-          </Flex>
-        ),
-      },
-      {
-        value: "12 Month",
-        
-        label: (
-          <Flex gap="small" justify="center" align="center" vertical style={{ color: 'white' }}>
-            12 Month
-          </Flex>
-        ),
-      },
-    ]}
-    defaultValue="12 Month"
-  />
-</div>
-            <ActivationFee> $49 Activation Fee </ActivationFee>
-            <Features>
-                            <Feature>
-                <Calendar size={20} />
-               {contractMonthTime =="No Contract"? <>Month-to-Month Freedom</>:<> Locked in Contract</>}
-              </Feature>
-              <Feature>
-                <Dumbbell size={20} />
-                All Equipment Access
-              </Feature>
-              <Feature>
-                <Shield size={20} />
-                Full Recovery Zone
-              </Feature>
 
-            </Features>
-            <Button disabled>
-              <Lock size={18} />
-              Coming Soon
-            </Button>
-          </PlanCard> */}
-          
+        {/* Mobile Tab Navigation */}
+        <MobileTabContainer>
+          <TabNavigation>
+            <TabButton 
+              active={activeTab === 'founding'} 
+              onClick={() => setActiveTab('founding')}
+            >
+              Founding Member
+            </TabButton>
+            <TabButton 
+              active={activeTab === 'annual'} 
+              onClick={() => setActiveTab('annual')}
+            >
+              Annual
+            </TabButton>
+          </TabNavigation>
 
-          <PlanCard
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-          >
-            <PlanName>Founding Member</PlanName>
-            <Price>$99 <span>/ month</span></Price>
-            <ActivationFee>$50 Activation Fee</ActivationFee>
-            <Features>
-              {/* <Feature>
-                <Star size={20} />
-                First Month Free
-              </Feature> */}
-              
-              <Feature>
-                <Clock size={20} />
-                Limited Time Offer
-              </Feature>
-              <Feature>
-                <Dumbbell size={20} />
-                All Equipment Access
-              </Feature>
-              <Feature>
-                <Shield size={20} />
-                Full Recovery Zone
-              </Feature>
-            </Features>
-            <Link to="/signup?contract=Founding" style={{ textDecoration: 'none' }}>
-              <Button>
-                Sign up
-              </Button>
-            </Link>
-          </PlanCard>
-          
-        
+          {/* Mobile Single Card Display */}
+          <MobileCardContainer>
+            {activeTab === 'founding' ? foundingMemberCard : annualCard}
+          </MobileCardContainer>
+        </MobileTabContainer>
 
-
-          <PlanCard
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
-            <PlanName>Annual</PlanName>
-            <Price>$79 <span>/ month</span></Price>
-            <ActivationFee>$50 Activation Fee</ActivationFee>
-            <ActivationFee>Paid in full - 948</ActivationFee>
-            <Features>
-              <Feature>
-                <Calendar size={20} />
-                12-Month Commitment
-              </Feature>
-              <Feature>
-                <Dumbbell size={20} />
-                All Equipment Access
-              </Feature>
-              <Feature>
-                <Shield size={20} />
-                Full Recovery Zone
-              </Feature>
-
-            </Features>
-            <Link to="/signup?contract=Annual" style={{ textDecoration: 'none' }}>
-              <Button>
-                Sign up
-              </Button>
-            </Link>
-          </PlanCard>
-
-          
-          
-        </Grid>
+        {/* Desktop Grid Layout */}
+        <DesktopGrid>
+          {foundingMemberCard}
+          {annualCard}
+        </DesktopGrid>
 
         <MaintenanceFee>
-          <p>Every membership includes a bi-annual maintenance fee of $59.99, conveniently billed every six months following account creation.</p>
+          <p>Every membership includes a bi-annual maintenance fee of $59.99.</p>
         </MaintenanceFee>
       </Container>
     </Section>
