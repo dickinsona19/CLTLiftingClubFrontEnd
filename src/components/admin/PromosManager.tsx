@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Tag, Collapse } from 'antd';
+import { Table, Button, Modal, Form, Input, message, Popconfirm, Space, Tag } from 'antd';
 import { PlusCircle, Trash2, Building, Users, Gift, Eye, QrCode } from 'lucide-react';
 import styled from 'styled-components';
 
@@ -146,7 +146,8 @@ interface Business {
   id: string;
   name: string;
   promoCode: string;
-  recruitedUsers: User[];
+  users: User[]; // Updated from recruitedUsers to match your code
+  freePassCount: number;
 }
 
 interface User {
@@ -166,7 +167,7 @@ const PromosManager = () => {
   const [loading, setLoading] = useState(false);
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
 
-  // Mock API URL - replace with your actual API endpoint
+  // API URL
   const API_URL = 'https://boss-lifting-club-api.onrender.com/api/promos';
 
   useEffect(() => {
@@ -208,31 +209,44 @@ const PromosManager = () => {
       message.success('Business added successfully');
       form.resetFields();
       setIsModalVisible(false);
-      fetchBusinesses(); // Recall fetchBusinesses to update the list
+      fetchBusinesses();
     } catch (error) {
       console.error('Error adding business:', error);
       message.error('Failed to add business');
     }
   };
-  const handleQRCode = async (promoCode: string) => {
+
+  const handleQRCode = async (promoCode: string, e?: React.MouseEvent) => {
+    // Prevent row click event from bubbling up
+    e?.stopPropagation();
+
     try {
-      const response = await fetch(`${API_URL}/generate-qr?comingFrom=${promoCode}`, {
-        method: 'GET',
+      const url = `https://www.cltliftingclub.com/freepass?comingFrom=${promoCode}`;
+      const response = await fetch(`${API_URL}/generate-qr`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(url), // Send URL as a JSON string
       });
+
       if (!response.ok) {
         throw new Error('Failed to generate QR code');
       }
-      const data = await response.json();
-      console.log('QR code URL:', data.url);
-      // Optionally open the URL in a new tab
-      window.open(data.url, '_blank');
+
+      const data = await response.text(); // Expect text response from API
+      message.success(data); // Display success message from API
+      console.log('QR code generated:', data);
     } catch (error) {
       console.error('Error generating QR code:', error);
       message.error('Failed to generate QR code');
     }
   };
 
-  const handleDeleteBusiness = async (businessId: string) => {
+  const handleDeleteBusiness = async (businessId: string, e?: React.MouseEvent) => {
+    e?.
+
+stopPropagation(); // Prevent row click
     try {
       const response = await fetch(`${API_URL}/${businessId}`, {
         method: 'DELETE',
@@ -270,38 +284,39 @@ const PromosManager = () => {
     },
     {
       title: 'Promo Code',
-      dataIndex: 'codeToken',
+      dataIndex: 'codeToken', // Updated to match API field
       key: 'codeToken',
       render: (code: string) => <PromoCode>{code}</PromoCode>,
     },
     {
       title: 'Recruited Users',
       key: 'recruitedCount',
-      render: (_, record: Business) => (
+      render: (_: any, record: Business) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Users size={16} />
           <span>{record.users.length}</span>
         </div>
       ),
-    }, {
-        title: 'Free Passes ',
-        key: 'freePasses',
-        render: (_, record: Business) => (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Users size={16} />
-            <span>{record.freePassCount}</span>
-          </div>
-        ),
-      },
+    },
+    {
+      title: 'Free Passes',
+      key: 'freePasses',
+      render: (_: any, record: Business) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Users size={16} />
+          <span>{record.freePassCount}</span>
+        </div>
+      ),
+    },
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record: Business) => (
+      render: (_: any, record: Business) => (
         <Space>
           <Button
             icon={<Eye size={16} />}
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation(); // Prevent row click
               toggleExpanded(record.id);
             }}
             size="small"
@@ -310,31 +325,24 @@ const PromosManager = () => {
           </Button>
           <Button
             icon={<QrCode size={16} />}
-            onClick={(e) => {
-              handleQRCode(record.promoCode);
-            }}
-
+            onClick={(e) => handleQRCode(record.codeToken, e)} // Pass event to stop propagation
             size="small"
+            style={{ zIndex: 100 }}
           >
-            Get Qr Code
+            Get QR Code
           </Button>
           <Popconfirm
             title="Are you sure you want to delete this business?"
-            onConfirm={(e) => {
-              e?.stopPropagation();
-              handleDeleteBusiness(record.id);
-            }}
+            onConfirm={(e) => handleDeleteBusiness(record.id, e)}
             okText="Yes"
             cancelText="No"
           >
             <Button 
               icon={<Trash2 size={16} />} 
               size="small"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()} // Prevent row click
             />
           </Popconfirm>
-
-         
         </Space>
       ),
     },
