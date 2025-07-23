@@ -1,26 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Card, Select, Statistic, Row, Col, Spin, Table } from 'antd';
+import { Card, Select, Statistic, Row, Col, Spin, Table, Checkbox } from 'antd';
 import styled from 'styled-components';
-import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react';
-import { Line, Bar } from 'react-chartjs-2';
+import { TrendingUp, DollarSign, Users, BarChart3, RotateCcw } from 'lucide-react';
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
+import moment from 'moment';
 
 // Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
   BarElement,
   Title,
   Tooltip,
@@ -29,6 +26,8 @@ ChartJS.register(
 
 const Container = styled.div`
   padding: 0;
+  overflow-y: auto;
+  height: 100vh;
 `;
 
 const Header = styled.div`
@@ -78,6 +77,15 @@ const StyledSelect = styled(Select)`
 
   &:hover .ant-select-selector {
     border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+`;
+
+const StyledCheckbox = styled(Checkbox)`
+  color: rgba(255, 255, 255, 0.8);
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #3B82F6;
+    border-color: #3B82F6;
   }
 `;
 
@@ -186,18 +194,26 @@ interface AnalyticsData {
     labels: string[];
     thisMonthActual: number[];
     thisMonthProjected: number[];
-    lastMonth: number[];
   };
   userTypeBreakdown: {
     [key: string]: {
       count: number;
       revenue: number;
+      ltv: number;
     };
   };
+  churnCount: number;
+  churnRate: number;
+  newSubscriptions: number;
+  mrr: number;
+  totalLifetimeRevenue: number;
+  averageLTV: number;
 }
 
 const AnalyticsPage = () => {
   const [selectedUserType, setSelectedUserType] = useState<string>('all');
+  const [selectedMonth, setSelectedMonth] = useState<string>(moment().format('YYYY-MM'));
+  const [includeMaintenance, setIncludeMaintenance] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     totalRevenue: 0,
@@ -213,9 +229,14 @@ const AnalyticsPage = () => {
       labels: [],
       thisMonthActual: [],
       thisMonthProjected: [],
-      lastMonth: [],
     },
     userTypeBreakdown: {},
+    churnCount: 0,
+    churnRate: 0,
+    newSubscriptions: 0,
+    mrr: 0,
+    totalLifetimeRevenue: 0,
+    averageLTV: 0,
   });
 
   const userTypes = [
@@ -223,44 +244,49 @@ const AnalyticsPage = () => {
     { value: 'monthly', label: 'Monthly' },
     { value: 'annual', label: 'Annual' },
     { value: 'founder', label: 'Founder' },
+    { value: 'maintenance', label: 'Maintenance' },
     { value: 'misc', label: 'Misc' },
   ];
 
+  // Generate last 24 months for selection
+  const monthOptions = [];
+  for (let i = 0; i < 24; i++) {
+    const monthDate = moment().subtract(i, 'months');
+    monthOptions.push({
+      value: monthDate.format('YYYY-MM'),
+      label: monthDate.format('MMMM YYYY'),
+    });
+  }
+
   useEffect(() => {
-    fetchAnalyticsData();
-  }, [selectedUserType]);
-
-  const fetchAnalyticsData = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/analytics?userType=${selectedUserType}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          // Add authentication headers if required, e.g., Authorization: Bearer <token>
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const formattedData: AnalyticsData = {
-          ...data,
-          chartData: {
-            labels: data.chartData.labels,
-            thisMonthActual: data.chartData.thisMonthActual.map((value: number) => Number(value)),
-            thisMonthProjected: data.chartData.thisMonthProjected.map((value: number) => Number(value)),
-            lastMonth: data.chartData.lastMonth.map((value: number) => Number(value)),
-          },
-        };
-        setAnalyticsData(formattedData);
-      } else {
-        console.error('Failed to fetch analytics data:', response.statusText);
+    const fetchAnalyticsData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`https://boss-lifting-club-api.onrender.com/api/analytics?userType=${selectedUserType}&month=${selectedMonth}&includeMaintenance=${includeMaintenance}`, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const formattedData = {
+            ...data,
+            chartData: {
+              labels: data.chartData.labels,
+              thisMonthActual: data.chartData.thisMonthActual.map((value) => Number(value)),
+              thisMonthProjected: data.chartData.thisMonthProjected.map((value) => Number(value)),
+            },
+          };
+          setAnalyticsData(formattedData);
+        } else {
+          console.error('Failed to fetch analytics data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching analytics data:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching analytics data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchAnalyticsData();
+  }, [selectedUserType, selectedMonth, includeMaintenance]);
 
   const chartOptions = {
     responsive: true,
@@ -294,37 +320,30 @@ const AnalyticsPage = () => {
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
         },
+        stacked: true,
+      },
+    },
+    elements: {
+      bar: {
+        borderWidth: 1,
       },
     },
   };
 
-  const lineChartData = {
+  const revenueChartData = {
     labels: analyticsData.chartData.labels,
     datasets: [
       {
-        label: 'This Month (Actual)',
+        label: 'Actual Revenue',
         data: analyticsData.chartData.thisMonthActual,
-        borderColor: '#3B82F6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4,
-        fill: true,
+        backgroundColor: '#3B82F6',
+        stack: 'revenue',
       },
       {
-        label: 'This Month (Projected)',
+        label: 'Projected Revenue',
         data: analyticsData.chartData.thisMonthProjected,
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        borderDash: [5, 5],
-        tension: 0.4,
-        fill: true,
-      },
-      {
-        label: 'Last Month',
-        data: analyticsData.chartData.lastMonth,
-        borderColor: 'rgba(255, 255, 255, 0.5)',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        tension: 0.4,
-        fill: true,
+        backgroundColor: '#10B981',
+        stack: 'revenue',
       },
     ],
   };
@@ -340,12 +359,16 @@ const AnalyticsPage = () => {
           'rgba(16, 185, 129, 0.8)',
           'rgba(245, 158, 11, 0.8)',
           'rgba(239, 68, 68, 0.8)',
+          'rgba(139, 92, 246, 0.8)',
+          'rgba(236, 72, 153, 0.8)',
         ],
         borderColor: [
           '#3B82F6',
           '#10B981',
           '#F59E0B',
           '#EF4444',
+          '#8B5CF6',
+          '#EC4899',
         ],
         borderWidth: 1,
       },
@@ -380,6 +403,12 @@ const AnalyticsPage = () => {
       key: 'revenue',
       render: (value: number) => `$${Number(value).toLocaleString()}`,
     },
+    {
+      title: 'LTV ($)',
+      dataIndex: 'ltv',
+      key: 'ltv',
+      render: (value: number) => `$${Number(value).toLocaleString()}`,
+    },
   ];
 
   const tableData = Object.entries(analyticsData.userTypeBreakdown).map(([type, data]) => ({
@@ -387,6 +416,7 @@ const AnalyticsPage = () => {
     type: type.charAt(0).toUpperCase() + type.slice(1),
     count: data.count,
     revenue: data.revenue,
+    ltv: data.ltv,
   }));
 
   return (
@@ -409,6 +439,22 @@ const AnalyticsPage = () => {
               </Option>
             ))}
           </StyledSelect>
+          <FilterLabel>Month:</FilterLabel>
+          <StyledSelect
+            value={selectedMonth}
+            onChange={setSelectedMonth}
+            placeholder="Select month"
+            dropdownStyle={{ maxHeight: '300px', overflowY: 'auto' }}
+          >
+            {monthOptions.map(option => (
+              <Option key={option.value} value={option.value}>
+                {option.label}
+              </Option>
+            ))}
+          </StyledSelect>
+          <StyledCheckbox checked={includeMaintenance} onChange={e => setIncludeMaintenance(e.target.checked)}>
+            Include Maintenance Fee
+          </StyledCheckbox>
         </FilterSection>
       </Header>
 
@@ -421,7 +467,7 @@ const AnalyticsPage = () => {
           <MetricsGrid>
             <StyledCard>
               <Statistic
-                title="Actual Revenue This Month"
+                title="Actual Revenue (Selected Month)"
                 value={analyticsData.totalRevenue}
                 precision={2}
                 prefix={<DollarSign size={20} />}
@@ -431,7 +477,7 @@ const AnalyticsPage = () => {
 
             <StyledCard>
               <Statistic
-                title="Active Subscriptions"
+                title="Active Subscriptions (End of Month)"
                 value={analyticsData.userCount}
                 prefix={<Users size={20} />}
               />
@@ -459,6 +505,62 @@ const AnalyticsPage = () => {
                 }}
               />
             </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="Churn Rate"
+                value={analyticsData.churnRate}
+                precision={1}
+                suffix="%"
+                valueStyle={{ color: analyticsData.churnRate > 0 ? '#EF4444' : '#10B981' }}
+              />
+            </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="Churn Count"
+                value={analyticsData.churnCount}
+                prefix={<RotateCcw size={20} />}
+              />
+            </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="New Subscriptions"
+                value={analyticsData.newSubscriptions}
+                prefix={<Users size={20} />}
+              />
+            </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="MRR (End of Month)"
+                value={analyticsData.mrr}
+                precision={2}
+                prefix={<DollarSign size={20} />}
+                formatter={(value) => `$${Number(value).toLocaleString()}`}
+              />
+            </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="Total Lifetime Revenue"
+                value={analyticsData.totalLifetimeRevenue}
+                precision={2}
+                prefix={<DollarSign size={20} />}
+                formatter={(value) => `$${Number(value).toLocaleString()}`}
+              />
+            </StyledCard>
+
+            <StyledCard>
+              <Statistic
+                title="Average LTV"
+                value={analyticsData.averageLTV}
+                precision={2}
+                prefix={<DollarSign size={20} />}
+                formatter={(value) => `$${Number(value).toLocaleString()}`}
+              />
+            </StyledCard>
           </MetricsGrid>
 
           <Row gutter={[16, 16]}>
@@ -466,9 +568,9 @@ const AnalyticsPage = () => {
               <ChartContainer>
                 <ChartTitle>
                   <TrendingUp size={20} />
-                  Revenue Comparison (This Month vs Last Month)
+                  Revenue Over Time (Last 6 Months)
                 </ChartTitle>
-                <Line data={lineChartData} options={chartOptions} />
+                <Bar data={revenueChartData} options={chartOptions} />
               </ChartContainer>
             </Col>
 
@@ -495,7 +597,7 @@ const AnalyticsPage = () => {
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={6}>
                 <Statistic
-                  title="This Month (Actual)"
+                  title="Selected Month (Actual)"
                   value={analyticsData.monthlyComparison.thisMonth}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
@@ -503,7 +605,7 @@ const AnalyticsPage = () => {
               </Col>
               <Col xs={24} sm={6}>
                 <Statistic
-                  title="This Month (Projected)"
+                  title="Selected Month (Projected)"
                   value={analyticsData.projectedRevenue}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
@@ -511,7 +613,7 @@ const AnalyticsPage = () => {
               </Col>
               <Col xs={24} sm={6}>
                 <Statistic
-                  title="This Month (Total)"
+                  title="Selected Month (Total)"
                   value={analyticsData.monthlyComparison.total}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
@@ -519,7 +621,7 @@ const AnalyticsPage = () => {
               </Col>
               <Col xs={24} sm={6}>
                 <Statistic
-                  title="Last Month"
+                  title="Previous Month"
                   value={analyticsData.monthlyComparison.lastMonth}
                   prefix={<DollarSign size={16} />}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
