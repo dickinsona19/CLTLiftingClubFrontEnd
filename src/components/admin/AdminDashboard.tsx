@@ -10,6 +10,7 @@ import { CheckCircle, XCircle, LogOut } from 'lucide-react';
 import PotentialUsersList from './PotentialUsersList';
 import PromosManager from './PromosManager';
 import AnalyticsPage from './AnalyticsPage';
+import PersonalTrainerManager from './PersonalTrainerManager';
 const DashboardContainer = styled.div`
   min-height: 100vh;
   background: #1a1a1a;
@@ -341,6 +342,11 @@ const AdminDashboard = () => {
       key: '6',
       label: 'Analytics',
       children: <AnalyticsPage />,
+    },
+    {
+      key: '7',
+      label: 'Personal Trainers',
+      children: <PersonalTrainerManager />,
     }
   ];
 
