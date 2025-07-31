@@ -257,7 +257,7 @@ export const Footer = () => {
             </ContactItem>
             <ContactItem>
               <Phone size={18} />
-              <div>(704) 785-5797</div>
+              <div>(919) 744-4787</div>
             </ContactItem>
             <ContactItem>
               <Mail size={18} />

@@ -189,7 +189,7 @@ export const CommunityLocation = () => {
             <InfoContent>
               <InfoTitle>Contact</InfoTitle>
               <InfoText>
-                Phone: (704) 785-5797<br />
+                Phone: (919) 744-4787<br />
                 Email: cltlifting@cltliftingclub.com
               </InfoText>
             </InfoContent>
